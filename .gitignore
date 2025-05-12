@@ -39,3 +39,7 @@
 *.tdo
 *.eps
 *~
+
+slides/*.md
+slides/*.tex
+.snakemake
