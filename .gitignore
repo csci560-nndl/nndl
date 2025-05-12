@@ -1,8 +1,8 @@
 *.pyc
 .ipynb_checkpoints/*
-*/.ipynb_checkpoints/*
-*/*/.ipynb_checkpoints/*
-.vagrant/*
+**/.ipynb_checkpoints/*
+*.vagrant/*
+.Trash-*/*
 
 *.acn
 *.swp
@@ -39,5 +39,3 @@
 *.tdo
 *.eps
 *~
-presentation/.mk
-presentation/presentation.tex.project.vim
