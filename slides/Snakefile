@@ -4,7 +4,7 @@ PANDOC_BEAMER_ARGS="--to=beamer --standalone --dpi=300"
 PANDOC_LATEX_ARGS="-s -N"
 
 rule all:
-	input:  ["slides-class-sessions.pdf", "llm-ethics-issues.pdf"]
+	input:  ["slides-class-sessions.pdf", "llm-ethics-issues.pdf", "l01-what-is-deep-learning.pdf"]
 
 rule pmd_to_md:
 	input:  "{file}.pmd"

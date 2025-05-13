@@ -1,0 +1,99 @@
+---
+title: "L01: What is Deep Learning"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 1"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# Artificial Intelligence, Machine Learning, Deep Learning, Generative AI
+
+::: columns
+
+::: {.column width=50%}
+
+- **Artificial Intelligence** (AI): *the effort to automate intellectual tasks normally performmed by humans*
+- **Machine Learning** (ML): *machine looks at input and answer and figures out the rules*
+- **Deep Learning** (DL, DNN): *learning successive layers of increasingly meaningful representations*
+- **Generative AI** (GenAI): *extend from reactive to creative activities*
+
+::::
+
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.35]{figures/l01-ai-venn-diagram}
+\label{fig:gemini-senator}
+\caption{Relation of AI with ML, DL and GenAI.  Each is a more specialized subset of the larger discipline. \parencite[pg.2]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Machine Learning: Learning Rules and Representations from Data
+
+::: columns
+
+::: {.column width=50%}
+
+- Usually have human programmer write down rules (a computer program) that turns input into approproate answers.
+- In ML paradigm, you give a ML algorithm the input and answers, and it "learns" the rules.
+
+::::
+
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.35]{figures/l01-machine-learning-paradigm}
+\label{fig:gemini-senator}
+\caption{Machine Learning coordinage change and learning representations.. \parencite[pg.4]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Machine Learning: Learning Rules and Representations from Data
+
+\begin{figure}
+\includegraphics[scale=1.25]{figures/ch01-4-machine-learning-coordinate-change}
+\label{fig:gemini-senator}
+\caption{ML a new programming paradigm. \parencite[Fig. 1.4]{chollet-2021}}
+\end{figure}
+
+
+# Neural Networks and Deep Learning: The "Deep" in "Deep Learning"
+
+
+# Understanding how Deep Learning Workds in Three Figures
+
+
+# AI Boom / Bust and AI Winter
+
+
+# The Modern Machine Learning Landscape
+
+
+# Why Deep Learning? Why Now?
+
+# Bibliography
+\tiny
+\printbibliography
