@@ -27,7 +27,7 @@ header-includes:
 
 ::: {.column width=50%}
 
-- **Artificial Intelligence** (AI): *the effort to automate intellectual tasks normally performmed by humans*
+- **Artificial Intelligence** (AI): *the effort to automate intellectual tasks normally performed by humans*
 - **Machine Learning** (ML): *machine looks at input and answer and figures out the rules*
 - **Deep Learning** (DL, DNN): *learning successive layers of increasingly meaningful representations*
 - **Generative AI** (GenAI): *extend from reactive to creative activities*
@@ -53,7 +53,7 @@ header-includes:
 
 ::: {.column width=50%}
 
-- Usually have human programmer write down rules (a computer program) that turns input into approproate answers.
+- Usually have human programmer write down rules (a computer program) that turns input into appropriate answers.
 - In ML paradigm, you give a ML algorithm the input and answers, and it "learns" the rules.
 
 ::::
@@ -63,7 +63,7 @@ header-includes:
 \begin{figure}
 \includegraphics[scale=0.35]{figures/l01-machine-learning-paradigm}
 \label{fig:l01-machine-learning-paradigm}
-\caption{Machine Learning coordinage change and learning representations.. \parencite[pg.4]{chollet-2021}}
+\caption{Machine Learning coordinate change and learning representations.. \parencite[pg.4]{chollet-2021}}
 \end{figure}
 
 
@@ -82,6 +82,27 @@ header-includes:
 
 # Neural Networks and Deep Learning: The "Deep" in "Deep Learning"
 
+::: columns
+
+::: {.column width=66%}
+
+\begin{figure}
+\includegraphics[scale=1.25]{figures/ch01-6-deep-learning-digit-classification-model}
+\label{fig:ch01-6-deep-learning-digit-classification-model}
+\caption{Data representations learned by a digit-classification model \parencite[Fig. 1.6]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- **layered representations learning** or **hierarchical representations learning**
+- Information goes through successive filters and comes out increasingly *purified*.
+- Deep Learning is a multistage way to learn data representations.
+
+::::
+
+:::
 
 # Understanding how Deep Learning Works
 
@@ -177,11 +198,70 @@ header-includes:
 
 # AI Boom / Bust and AI Winter
 
+1. First AI Winter: 1970s Symbolic AI, Minsky: "In from three to eight years we will have a machine with the general
+   intelligence of an average human being."
+2. Second AI Winter: 1990s Expert Systems boom/bust
+3. Third AI Winter? Deep Learning / Generative AI
+
+I recommend reading Dr. Mitchel's Science article \parencite{mitchell-2025} for a recent measured take on the state of the art in Generative AI.
+
+\tiny
+\begin{block}{AI Winter}
+Although deep learning (and generative AI) has led to remarkable achievements in recent years, 
+expectations for what the field will be able to achieve in the next decade tend to run much
+higher than what will likely be possible.
+\end{block}
+
 
 # The Modern Machine Learning Landscape
 
+::: columns
+
+::: {.column width=66%}
+
+\begin{figure}
+\includegraphics[scale=0.95]{figures/l01-kaggle-ml-framework-survey}
+\label{fig:l01-kaggle-ml-framework-survey}
+\caption{Scikit-learn most popular ML framework, PyTorch has been growing. \parencite{kaggle-dsml-survey-2022}}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- Scikit-learn still most popular tool across ML and data science industry.
+- TensorFlow/Keras has dropped a bit in popularity since 2020 survey, still more users than PyTorch.
+- PyTorch has been growing in use and popularity however.
+
+::::
+
+:::
 
 # Why Deep Learning? Why Now?
+
+\begin{block}{Hardware}
+\begin{itemize}
+\item 5,000 times speedup of CPU performance
+\item GPUs: HPC supercomputers on a card.
+\end{itemize}
+\end{block}
+
+\begin{block}{Data}
+If deep learning is the steam engine, then (big) data is its coal: the raw material
+that powers our intelligent machines.
+\end{block}
+
+\begin{block}{Algorithms}
+\textbf{gradient propagation}: feedback signals fade as number of layers increased.
+\begin{itemize}
+\item Better \textit{activation functions}
+\item Better \textit{weight-initialization schemes}
+\item Better \textit{optimization schemes}
+\item Batch Normalization
+\item Depthwise separable convolutions
+\end{itemize}
+\end{block}
+
 
 # Bibliography
 \tiny
