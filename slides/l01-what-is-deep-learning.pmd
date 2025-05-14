@@ -38,7 +38,7 @@ header-includes:
 
 \begin{figure}
 \includegraphics[scale=0.35]{figures/l01-ai-venn-diagram}
-\label{fig:gemini-senator}
+\label{fig:l01-ai-venn-diagram}
 \caption{Relation of AI with ML, DL and GenAI.  Each is a more specialized subset of the larger discipline. \parencite[pg.2]{chollet-2021}}
 \end{figure}
 
@@ -47,7 +47,7 @@ header-includes:
 
 :::
 
-# Machine Learning: Learning Rules and Representations from Data
+# Machine Learning
 
 ::: columns
 
@@ -62,7 +62,7 @@ header-includes:
 
 \begin{figure}
 \includegraphics[scale=0.35]{figures/l01-machine-learning-paradigm}
-\label{fig:gemini-senator}
+\label{fig:l01-machine-learning-paradigm}
 \caption{Machine Learning coordinage change and learning representations.. \parencite[pg.4]{chollet-2021}}
 \end{figure}
 
@@ -71,11 +71,11 @@ header-includes:
 
 :::
 
-# Machine Learning: Learning Rules and Representations from Data
+# Learning Rules and Representations from Data
 
 \begin{figure}
 \includegraphics[scale=1.25]{figures/ch01-4-machine-learning-coordinate-change}
-\label{fig:gemini-senator}
+\label{fig:ch01-4-machine-learning-coordinate-change}
 \caption{ML a new programming paradigm. \parencite[Fig. 1.4]{chollet-2021}}
 \end{figure}
 
@@ -83,7 +83,96 @@ header-includes:
 # Neural Networks and Deep Learning: The "Deep" in "Deep Learning"
 
 
-# Understanding how Deep Learning Workds in Three Figures
+# Understanding how Deep Learning Works
+
+::: columns
+
+::: {.column width=20%}
+
+\vspace{0.25in}
+
+**Goal: finding the right values for these weights**
+
+::::
+
+:::: {.column width=46%}
+
+\begin{figure}
+\includegraphics[scale=1.00]{figures/ch01-7-deep-learning-loss-mechanism}
+\label{fig:ch01-7-deep-learning-loss-mechanism}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- A neural network is parameterized by its weights.
+
+::::
+
+:::
+
+# Understanding how Deep Learning Works
+
+::: columns
+
+::: {.column width=20%}
+
+\vspace{0.25in}
+
+**Goal: finding the right values for these weights**
+
+::::
+
+:::: {.column width=46%}
+
+\begin{figure}
+\includegraphics[scale=1.00]{figures/ch01-8-deep-learning-loss-mechanism}
+\label{fig:ch01-8-deep-learning-loss-mechanism}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- A neural network is parameterized by its weights.
+- A loss function measures the quality of the network's output.
+
+::::
+
+:::
+
+# Understanding how Deep Learning Works
+
+::: columns
+
+::: {.column width=20%}
+
+\vspace{0.25in}
+
+**Goal: finding the right values for these weights**
+
+::::
+
+:::: {.column width=46%}
+
+\begin{figure}
+\includegraphics[scale=1.00]{figures/ch01-9-deep-learning-loss-mechanism}
+\label{fig:ch01-9-deep-learning-loss-mechanism}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- A neural network is parameterized by its weights.
+- A loss function measures the quality of the network's output.
+- The loss score is used as a feedback signal to adjust the weights.
+
+::::
+
+:::
+
 
 
 # AI Boom / Bust and AI Winter
