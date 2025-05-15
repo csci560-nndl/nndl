@@ -23,10 +23,20 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-python.python",
-				"ms-python.vscode-pylance"
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter",
+				"ms-toolsai.vscode-jupyter-cell-tags",
+				"ms-toolsai.jupyter-renderers",
+				"ms-toolsai.jupyter-keymap"
 			]
 		}
 	},
+
+    // enable gpu access / passthrough
+    //"runArgs": [
+	//	"--gpus=all"
+    //],
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [8888],
 
