@@ -1,0 +1,224 @@
+---
+title: "L02: The Mathematical Building Blocks of Neural Networks"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 2"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# 
+\title{L02.1 A First Look at a Neural Network}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.1}
+\maketitle
+
+# 
+\title{L02.2 Data Representations for Neural Networks}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.2}
+\maketitle
+
+# 
+\title{L02.3 The Gears of Neural Networks: Tensor Operations}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.3}
+\maketitle
+
+
+# $\text{Matrix} \cdot \text{Matrix}$ Dot-Product
+
+::: columns
+
+::: {.column width=30%}
+
+- `x`, `y` are input matrices of shape `(a,b)` and `(b, c)` respectively
+- Each row of `x` performs an inner product with corresponding column of `y`
+- So resulting element `z[i,j]` is the inner product between row `i` of `x` and
+  column `j` of `y`
+- Resulting shape of `z` is `(a,c)`
+
+::::
+
+:::: {.column width=70%}
+
+\begin{figure}
+\includegraphics[scale=1.0]{figures/ch02-5-matrix-dot-product}
+\label{fig:ch02-5-matrix-dot-product}
+\caption{Matrix dot-product box diagram. \parencite[pg.43]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Vector Addition is Translation
+
+::: columns
+
+::: {.column width=30%}
+
+- Adding a vector to a point will move the point by a fixed amount.
+- Applied to a set of points, result is a translation.
+
+::::
+
+:::: {.column width=70%}
+
+\begin{figure}
+\includegraphics[scale=1.0]{figures/ch02-9-translation}
+\label{fig:ch02-9-translation}
+\caption{2D translation as vector addition. \parencite[pg.45]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Matrix Multiplication (dot product) is Rotation
+
+::: columns
+
+::: {.column width=30%}
+
+-  A counterclockwise rotation by angle `theta` achieved by dot product.
+
+::::
+
+:::: {.column width=70%}
+
+\begin{figure}
+\includegraphics[scale=1.0]{figures/ch02-10-rotation}
+\label{fig:ch02-10-rotation}
+\caption{2D rotation (counterclockwise) as a dot product. \parencite[pg.45]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Matrix Multiplication can also Scale
+
+::: columns
+
+::: {.column width=30%}
+
+-  Vertical and horizontal scaling also achieved by dot product with a suitable matrix.
+
+::::
+
+:::: {.column width=70%}
+
+\begin{figure}
+\includegraphics[scale=1.0]{figures/ch02-11-scaling}
+\label{fig:ch02-11-scaling}
+\caption{2D scaling as a dot product. \parencite[pg.46]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Affine Transformation: Linear transform and translation
+
+::: columns
+
+::: {.column width=30%}
+
+- Translation, Rotation, Scaling are all linear transformations.
+- Can combine, for example $y = W \cdot x + b$ is a linear transformation plus a translation.
+
+::::
+
+:::: {.column width=70%}
+
+\begin{figure}
+\includegraphics[scale=1.0]{figures/ch02-12-affine-transform}
+\label{fig:ch02-12-affine-transform}
+\caption{Affine transform in the plane. \parencite[pg.46]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# `relu` Nonlinear Activation Function
+
+::: columns
+
+::: {.column width=30%}
+
+- The previous are just combinations of linear transformations.
+- Multilayer NN made entirely of linear transformations can be reduced to a single linear transformation.
+- Activation functions produce a nonlinear translation.
+
+::::
+
+:::: {.column width=70%}
+
+\begin{figure}
+\includegraphics[scale=1.0]{figures/ch02-13-affine-transform-nonlinear-relu-activation}
+\label{fig:ch02-13-affine-transform-nonlinear-relu-activation}
+\caption{Affine transform followed by (nonlinear) `relu` activation. \parencite[pg.47]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# A Geometric Interpretation of Deep Learning
+
+::: columns
+
+::: {.column width=50%}
+
+- NN consist entirely of chains of tensor operations.
+- Can be interpreted as geometric transformations of the input data into a new space/shape/manifold.
+- Can interpret a NN as a very complex geometric transformation in a high-dimensional space,
+  implemented via a series of simple linear + nonlinear transformations.
+
+::::
+
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.8]{figures/ch02-14-complicated-manifold}
+\label{fig:ch02-14-complicated-manifold}
+\caption{Uncrumpling a complicated manifold of data. \parencite[pg.47]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# 
+\title{L02.4 The Engine of Neural Networks: Gradient-based Optimization}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.4}
+\maketitle
+
+# 
+\title{L02.5 Looking Back at our First Neural Network Example}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.5}
+\maketitle
+
+# Bibliography
+\tiny
+\printbibliography
