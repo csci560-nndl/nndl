@@ -67,8 +67,8 @@ RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bi
     && rm -rf /tmp/conda-tmp
 
 # Tensorflow doesn't install currently from conda, need to do a separate pip install
-#RUN pip install tensorflow
-RUN python3 -m pip install 'tensorflow[and-cuda]'
+RUN pip install tensorflow
+#RUN python3 -m pip install 'tensorflow[and-cuda]'
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
