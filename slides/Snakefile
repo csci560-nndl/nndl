@@ -10,7 +10,8 @@ rule all:
 	input:  ["slides-class-sessions.pdf", \
 	         "llm-ethics-issues.pdf", \
 	         "l01-what-is-deep-learning.pdf", \
-			 "l02-mathematical-building-blocks-nn.pdf"]
+	         "l02-mathematical-building-blocks-nn.pdf",\
+                 "l03-introduction-keras-tensorflow.pdf"]
 
 rule pmd_to_md:
 	input:  "{file}.pmd"

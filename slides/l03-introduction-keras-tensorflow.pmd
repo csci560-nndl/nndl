@@ -1,6 +1,6 @@
 ---
-title: "L02: The Mathematical Building Blocks of Neural Networks"
-subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 2"
+title: "L03: Introduction to Keras and Tensorflow"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 3"
 author: Derek Harter
 date: Summer 2025
 theme: Madrid
@@ -22,412 +22,81 @@ header-includes:
 ---
 
 # 
-\title{L02.1 A First Look at a Neural Network}
-\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.1}
+\title{L03.1 What is TensorFlow}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 3.1}
 \maketitle
+
+# What is `TensorFlow`
+
+- `TensorFlow` is a Python-based open machine learning platform.
+- Primary purpose of `TensorFlow` is to enable researchers to manipulate mathematical expressions over
+  numerical tensors.
+- `TensorFlow` scales fairly well.
+- `TensorFlow` goes beyond scope of `NumPy`:
+   - Can automatically compute the gradient of any differentiable expression.
+   - Can run not only on CPUs but also on GPUs and TPUs.
+   - Computation defined in `TensorFlow` can be easily distributed.
+   - `TensorFlow` programs can be exported to other runtimes.
+  
 
 # 
-\title{L02.2 Data Representations for Neural Networks}
-\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.2}
+\title{L03.2 What is `Keras`}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 3.2}
 \maketitle
 
-# 
-\title{L02.3 The Gears of Neural Networks: Tensor Operations}
-\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.3}
-\maketitle
-
-
-# $\text{Matrix} \cdot \text{Matrix}$ Dot-Product
-
-::: columns
-
-::: {.column width=30%}
-
-- `x`, `y` are input matrices of shape `(a,b)` and `(b, c)` respectively
-- Each row of `x` performs an inner product with corresponding column of `y`
-- So resulting element `z[i,j]` is the inner product between row `i` of `x` and
-  column `j` of `y`
-- Resulting shape of `z` is `(a,c)`
-
-::::
-
-:::: {.column width=70%}
-
-\begin{figure}
-\includegraphics[scale=1.0]{figures/ch02-5-matrix-dot-product}
-\label{fig:ch02-5-matrix-dot-product}
-\caption{Matrix dot-product box diagram. \parencite[pg.43]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# Vector Addition is Translation
-
-::: columns
-
-::: {.column width=30%}
-
-- Adding a vector to a point will move the point by a fixed amount.
-- Applied to a set of points, result is a translation.
-
-::::
-
-:::: {.column width=70%}
-
-\begin{figure}
-\includegraphics[scale=1.0]{figures/ch02-9-translation}
-\label{fig:ch02-9-translation}
-\caption{2D translation as vector addition. \parencite[pg.45]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# Matrix Multiplication (dot product) is Rotation
-
-::: columns
-
-::: {.column width=30%}
-
--  A counterclockwise rotation by angle `theta` achieved by dot product.
-
-::::
-
-:::: {.column width=70%}
-
-\begin{figure}
-\includegraphics[scale=1.0]{figures/ch02-10-rotation}
-\label{fig:ch02-10-rotation}
-\caption{2D rotation (counterclockwise) as a dot product. \parencite[pg.45]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# Matrix Multiplication can also Scale
-
-::: columns
-
-::: {.column width=30%}
-
--  Vertical and horizontal scaling also achieved by dot product with a suitable matrix.
-
-::::
-
-:::: {.column width=70%}
-
-\begin{figure}
-\includegraphics[scale=1.0]{figures/ch02-11-scaling}
-\label{fig:ch02-11-scaling}
-\caption{2D scaling as a dot product. \parencite[pg.46]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# Affine Transformation: Linear transform and translation
-
-::: columns
-
-::: {.column width=30%}
-
-- Translation, Rotation, Scaling are all linear transformations.
-- Can combine, for example $y = W \cdot x + b$ is a linear transformation plus a translation.
-
-::::
-
-:::: {.column width=70%}
-
-\begin{figure}
-\includegraphics[scale=1.0]{figures/ch02-12-affine-transform}
-\label{fig:ch02-12-affine-transform}
-\caption{Affine transform in the plane. \parencite[pg.46]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# `relu` Nonlinear Activation Function
-
-::: columns
-
-::: {.column width=30%}
-
-- The previous are just combinations of linear transformations.
-- Multilayer NN made entirely of linear transformations can be reduced to a single linear transformation.
-- Activation functions produce a nonlinear translation.
-
-::::
-
-:::: {.column width=70%}
-
-\begin{figure}
-\includegraphics[scale=1.0]{figures/ch02-13-affine-transform-nonlinear-relu-activation}
-\label{fig:ch02-13-affine-transform-nonlinear-relu-activation}
-\caption{Affine transform followed by (nonlinear) `relu` activation. \parencite[pg.47]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# A Geometric Interpretation of Deep Learning
-
-::: columns
-
-::: {.column width=50%}
-
-- NN consist entirely of chains of tensor operations.
-- Can be interpreted as geometric transformations of the input data into a new space/shape/manifold.
-- Can interpret a NN as a very complex geometric transformation in a high-dimensional space,
-  implemented via a series of simple linear + nonlinear transformations.
-
-::::
-
-:::: {.column width=50%}
-
-\begin{figure}
-\includegraphics[scale=0.8]{figures/ch02-14-complicated-manifold}
-\label{fig:ch02-14-complicated-manifold}
-\caption{Uncrumpling a complicated manifold of data. \parencite[pg.47]{chollet-2021}}
-\end{figure}
-
-
-::::
-
-:::
-
-# 
-\title{L02.4 The Engine of Neural Networks: Gradient-based Optimization}
-\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.4}
-\maketitle
-
-# 1D Mini-Batch Stochastic Gradient Descent
+# What is `Keras`
 
 ::: columns
 
 ::: {.column width=40%}
 
-- Stochastic because each batch of data is drawn at random. 
-- Nead a resonable value for the `learning_rate`.
-  - too small, slow convergence
-  - too large, diverges
+- `Keras` is a deep learning API for Python, built on top of `TensorFlow`.
+- Through `TensorFlow`, `Keras` can run on top of different types of hardware
+  (GPU, TPU or plain CPU).
+  - And can be scaled to thousands of machines.
+- `Keras` is a "high-level" API that prioritizes developer time/experience.
+- Supports several ranges of "workflows".
 
 ::::
 
 :::: {.column width=60%}
 
 \begin{figure}
-\includegraphics[scale=0.25]{figures/ch02-18-gradient-descent}
-\label{fig:ch02-18-gradient-descent}
-\caption{SGD down a 1D loss curve (one learnable parameter) \parencite[pg.53]{chollet-2021}}
+\includegraphics[scale=0.25]{figures/ch03-3-keras-tensorflow}
+\label{fig:ch03-3-keras-tensorflow}
+\caption{`Keras` and `TensorFlow`: `TensorFlow` is a low-level tensor computing platform,
+and `Keras` is a high-level deep learning AIP. \parencite[pg.70]{chollet-2021}}
 \end{figure}
 
-
-::::
-
-:::
-
-# 2D Mini-Batch Stochastic Gradient Descent
-
-::: columns
-
-::: {.column width=60%}
-
-\begin{figure}
-\includegraphics[scale=0.25]{figures/ch02-19-gradient-descent-2D}
-\label{fig:ch02-19-gradient-descent-2D}
-\caption{Gradient descent down a 2D loss surface (two learnable parameters). \parencite[pg.54]{chollet-2021}}
-\end{figure}
-
-::::
-
-:::: {.column width=40%}
-
-- Gradient descent will be used in highly dimensional spaces.
-- Every weight coefficient in a neural network is a free dimension in the space.
-  - Tens of thousands or even millions of parameters.
-- Cannot visualize, and intuitions from low-dimension examples can sometimes be misleading.
-
-::::
-
-:::
-
-# SGD with Momemtum / Advanced Optimization Methods
-
-::: columns
-
-::: {.column width=50%}
-
-\begin{figure}
-\includegraphics[scale=0.25]{figures/ch02-20-minimum-local-global}
-\label{fig:ch02-20-minimum-local-global}
-\caption{A local minimum and a global minimum. \parencite[pg.54]{chollet-2021}}
-\end{figure}
-
-::::
-
-:::: {.column width=50%}
-
-- **Momentum** take into account previous weight updates rather than just looking at current gradient.
-- SGD w/ momentum, Adagrad, RMSprop
-- Momentum addresses two issues with SGD: convergence speed and local minima.
-  - If enough momentum won't get stuck in local minimum
-  - Will adjust learning rate to to make sure convergence does not take too long. 
-- Implemented by moving each step based on both slope (current acceleration) and 
-  velocity.
-::::
-
-:::
-# Chaining Derivatives: The Backpropagation Algorithm
-
-::: columns
-
-::: {.column width=66%}
-
-- **Backpropagation** is a way to use the derivatives of simple operations to easily
-  compute the gradient of arbitrarily complex combinations of atomic operations.
-- A NN consists of many tensor operations chained together, each of which has a simple
-  known derivative.
-- The chain rule states that \newline `grad(y, x) == grad(y, x1) * grad(x1, x)`
-- Can be applied to any number of imtermediate functions
-
-\vspace{0.1in}
-
-```
-grad(y, x) == (grad(y, x3)  * grad(x3, x2) *
-               grad(x2, x1) * grad(x1, x))
-```
-
-::::
-
-:::: {.column width=33%}
-
-```python
-def fg(x):
-    x1 = g(x)
-    y = f(x1)
-    return y
-```
-
-\vspace{0.1in}
-
-```python
-def fghj(x):
-    x1 = j(x)
-    x2 = h(x1)
-    x3 = g(x2)
-    y = f(x3)
-    return y
-```
-
-::::
-
-:::
-
-# Computation Graphs and Autometic Differentiation
-
-::: columns
-
-::: {.column width=33%}
-
-\begin{figure}
-\includegraphics[scale=0.15]{figures/ch02-21-computation-graph-two-layer-model}
-\label{fig:ch02-21-computation-graph-two-layer-model}
-\caption{The computation graph representation of ch02 first look two-layer model. \parencite[pg.56]{chollet-2021}}
-\end{figure}
-
-::::
-
-:::: {.column width=66%}
-
-- Useful way to think of and perform backpropagation: use computation graphs.
-- A **computation graph** is a directed acyclic graph of operations.
-- Treat computation as data:
-  - Graph can be built in `TensorFlow` from a `GradientTape`
-  - Represents forward pass
-  - Can reverse links to perform backpropagation backward pass.
-::::
-
-:::
-
-# Automatic Differentiation: Forward Pass
-
-::: columns
-
-::: {.column width=60%}
-
-- Consider a simplified computation graph.
-  - single layer all variables are scalar
-  - scalar `w` for weights and `b` for bias
-  - scalar `x` input
-  - no activation function
-  - loss is difference of result and `y_true`
-- We want to update `w` and `b` in a way that will minimize `loss_val`.
-  - want to compute `grad(loss_val, b)` and `grad(loss_val, w).
-- Propagate these values to all nodes in the graph from top to bottom, 
-  until we reach `loss_val`.
-  - This is the **forward pass**
-
-
-::::
-
-:::: {.column width=40%}
-
-\begin{figure}
-\includegraphics[scale=0.20]{figures/ch02-23-computation-graph-forward-pass}
-\label{fig:ch02-23-computation-graph-forward-pass}
-\caption{Running a forward pass. \parencite[pg.58]{chollet-2021}}
-\end{figure}
-
-::::
-
-:::
-
-# Automatic Differentiation: Backward Pass / Backpropagation
-
-::: columns
-
-::: {.column width=50%}
-
-- "reverse" the graph
-  - For each edge from `A` to `B`, create opposite edge from `B` to `A`
-  - backward graph represents the **backward pass**, a concrete implementation of
-    performing **backpropagation**
-  - You can obtain the derivative of a node with respect to another node by
-    *multiplying the derivatives for each edge along the path linking the
-    two nodes*.
-
-
-::::
-
-:::: {.column width=50%}
-
-\begin{figure}
-\includegraphics[scale=0.20]{figures/ch02-24-computation-graph-backward-pass}
-\label{fig:ch02-24-computation-graph-backward-pass}
-\caption{Running a forward pass. \parencite[pg.58]{chollet-2021}}
-\end{figure}
 
 ::::
 
 :::
 
 # 
-\title{L02.5 Looking Back at our First Neural Network Example}
-\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.5}
+\title{L03.4 Setting up a Deep Learning Workspace}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 3.4}
+\maketitle
+
+# Setting up a Deep Learning Workspace
+
+
+- To do deep learning on a GPU, you have three options:
+  1. Buy and install a physical NVIDIA GPU on your workstation.
+     - [Dettmer The Best GPUs for Deep Learning in 2023](https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/)
+	 - [CUDA GPU Compute Capability](https://developer.nvidia.com/cuda-gpus)
+  2. Use GPU instances on Google Cloud or AWS EC2.
+  3. Use the free GPU runtime from [Google Colab](https://colab.research.google.com/): https://colab.research.google.com/
+
+
+# 
+\title{L03.5 First Steps with TensorFlow}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 3.5}
+\maketitle
+
+# 
+\title{L03.6 Anatomy of a Neural Network: Understanding core Keras APIs}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 3.6}
 \maketitle
 
 
