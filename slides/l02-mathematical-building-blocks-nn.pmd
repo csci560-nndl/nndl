@@ -214,10 +214,222 @@ header-includes:
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.4}
 \maketitle
 
+# 1D Mini-Batch Stochastic Gradient Descent
+
+::: columns
+
+::: {.column width=40%}
+
+- Stochastic because each batch of data is drawn at random. 
+- Nead a resonable value for the `learning_rate`.
+  - too small, slow convergence
+  - too large, diverges
+
+::::
+
+:::: {.column width=60%}
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch02-18-gradient-descent}
+\label{fig:ch02-18-gradient-descent}
+\caption{SGD down a 1D loss curve (one learnable parameter) \parencite[pg.53]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# 2D Mini-Batch Stochastic Gradient Descent
+
+::: columns
+
+::: {.column width=60%}
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch02-19-gradient-descent-2D}
+\label{fig:ch02-19-gradient-descent-2D}
+\caption{Gradient descent down a 2D loss surface (two learnable parameters). \parencite[pg.54]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=40%}
+
+- Gradient descent will be used in highly dimensional spaces.
+- Every weight coefficient in a neural network is a free dimension in the space.
+  - Tens of thousands or even millions of parameters.
+- Cannot visualize, and intuitions from low-dimension examples can sometimes be misleading.
+
+::::
+
+:::
+
+# SGD with Momemtum / Advanced Optimization Methods
+
+::: columns
+
+::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch02-20-minimum-local-global}
+\label{fig:ch02-20-minimum-local-global}
+\caption{A local minimum and a global minimum. \parencite[pg.54]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=50%}
+
+- **Momentum** take into account previous weight updates rather than just looking at current gradient.
+- SGD w/ momentum, Adagrad, RMSprop
+- Momentum addresses two issues with SGD: convergence speed and local minima.
+  - If enough momentum won't get stuck in local minimum
+  - Will adjust learning rate to to make sure convergence does not take too long. 
+- Implemented by moving each step based on both slope (current acceleration) and 
+  velocity.
+::::
+
+:::
+# Chaining Derivatives: The Backpropagation Algorithm
+
+::: columns
+
+::: {.column width=66%}
+
+- **Backpropagation** is a way to use the derivatives of simple operations to easily
+  compute the gradient of arbitrarily complex combinations of atomic operations.
+- A NN consists of many tensor operations chained together, each of which has a simple
+  known derivative.
+- The chain rule states that \newline `grad(y, x) == grad(y, x1) * grad(x1, x)`
+- Can be applied to any number of imtermediate functions
+
+\vspace{0.1in}
+
+```
+grad(y, x) == (grad(y, x3)  * grad(x3, x2) *
+               grad(x2, x1) * grad(x1, x))
+```
+
+::::
+
+:::: {.column width=33%}
+
+```python
+def fg(x):
+    x1 = g(x)
+    y = f(x1)
+    return y
+```
+
+\vspace{0.1in}
+
+```python
+def fghj(x):
+    x1 = j(x)
+    x2 = h(x1)
+    x3 = g(x2)
+    y = f(x3)
+    return y
+```
+
+::::
+
+:::
+
+# Computation Graphs and Autometic Differentiation
+
+::: columns
+
+::: {.column width=33%}
+
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch02-21-computation-graph-two-layer-model}
+\label{fig:ch02-21-computation-graph-two-layer-model}
+\caption{The computation graph representation of ch02 first look two-layer model. \parencite[pg.56]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=66%}
+
+- Useful way to think of and perform backpropagation: use computation graphs.
+- A **computation graph** is a directed acyclic graph of operations.
+- Treat computation as data:
+  - Graph can be built in `TensorFlow` from a `GradientTape`
+  - Represents forward pass
+  - Can reverse links to perform backpropagation backward pass.
+::::
+
+:::
+
+# Automatic Differentiation: Forward Pass
+
+::: columns
+
+::: {.column width=60%}
+
+- Consider a simplified computation graph.
+  - single layer all variables are scalar
+  - scalar `w` for weights and `b` for bias
+  - scalar `x` input
+  - no activation function
+  - loss is difference of result and `y_true`
+- We want to update `w` and `b` in a way that will minimize `loss_val`.
+  - want to compute `grad(loss_val, b)` and `grad(loss_val, w).
+- Propagate these values to all nodes in the graph from top to bottom, 
+  until we reach `loss_val`.
+  - This is the **forward pass**
+
+
+::::
+
+:::: {.column width=40%}
+
+\begin{figure}
+\includegraphics[scale=0.20]{figures/ch02-23-computation-graph-forward-pass}
+\label{fig:ch02-23-computation-graph-forward-pass}
+\caption{Running a forward pass. \parencite[pg.58]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::
+
+# Automatic Differentiation: Backward Pass / Backpropagation
+
+::: columns
+
+::: {.column width=50%}
+
+- "reverse" the graph
+  - For each edge from `A` to `B`, create opposite edge from `B` to `A`
+  - backward graph represents the **backward pass**, a concrete implementation of
+    performing **backpropagation**
+  - You can obtain the derivative of a node with respect to another node by
+    *multiplying the derivatives for each edge along the path linking the
+    two nodes*.
+
+
+::::
+
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.20]{figures/ch02-24-computation-graph-backward-pass}
+\label{fig:ch02-24-computation-graph-backward-pass}
+\caption{Running a forward pass. \parencite[pg.58]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::
+
 # 
 \title{L02.5 Looking Back at our First Neural Network Example}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.5}
 \maketitle
+
 
 # Bibliography
 \tiny
