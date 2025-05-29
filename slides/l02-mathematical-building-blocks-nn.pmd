@@ -425,6 +425,37 @@ def fghj(x):
 
 :::
 
+# Automatic Differentiation using the Computation Graph
+
+::: columns
+
+::: {.column width=50%}
+
+- Chain rule says the backword graph can be used to obtain the derivatives of the
+  learnable parameters with respect to the loss.
+- **Multiply the derivitives for each edge along the path linking two nodes**.
+- For instance:
+```
+grad(loss_val, w) =
+    grad(loss_val, x2) *
+    grad(x2, x1) * 
+    grad(x1, w)
+```
+
+::::
+
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.20]{figures/ch02-25-computation-graph-grad-loss-wrt-w}
+\label{fig:ch02-25-computation-graph-grad-loss-wrt-w}
+\caption{Path from ~loss\_value~ to ~w~ in the backward graph. \parencite[pg.59]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::
+
 # 
 \title{L02.5 Looking Back at our First Neural Network Example}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 2.5}
