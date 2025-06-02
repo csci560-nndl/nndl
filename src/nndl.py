@@ -70,6 +70,6 @@ def plot_history(ax, history_dict, metric_key):
     ax.plot(epochs, history_dict[val_key], 'b-', label=val_label)
     ax.set_xlabel('Epochs')
     ax.set_ylabel(metric_key)
-    ax.set_xticks(epochs)
+    #ax.set_xticks(epochs)
     ax.grid()
     ax.legend();
