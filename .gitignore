@@ -5,6 +5,10 @@
 .Trash-*/*
 .virtual_documents/*
 
+
+*.keras
+*.v2
+
 *.acn
 *.swp
 *.acr
