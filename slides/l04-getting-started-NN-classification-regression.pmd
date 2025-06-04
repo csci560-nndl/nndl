@@ -1,0 +1,42 @@
+---
+title: "L04: Getting Started with Neural Networks: Classification and Regression"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 4"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# 
+\title{L04.1 Classifying Movie Reviews: Binary Classification}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 4.1}
+\maketitle
+
+# 
+\title{L04.2 Classifying News Articles: Multiclass Classification}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 4.2}
+\maketitle
+
+# 
+\title{L04.3 Predicting House Prices: Regression}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 4.3}
+\maketitle
+
+
+# Bibliography
+\tiny
+\printbibliography

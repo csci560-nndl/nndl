@@ -1,0 +1,348 @@
+---
+title: "L05: Fundamentals of Machine Learning"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 5"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# 
+\title{L05.1 Generalization: The goal of machine learning}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.1}
+\maketitle
+
+# Generalization: The goal of machine learning
+
+::: columns
+
+::: {.column width=40%}
+
+\begin{block}{Fundamental Issue of ML}
+The fundamental issue in machine learning is the tension between
+optimization and generalization.
+\end{block}
+
+::::
+
+:::: {.column width=60%}
+
+- After just a few epochs of training, performance on never-before-seen data
+  starts to diverge
+  - The models start to **overfit**
+- **Optimization** refers to the process of adjusting a model to get the best
+  performance possible on the training data.
+- **Generalization** refers to how well the trained model performs on data it
+  has never seen before.
+
+::::
+
+:::
+
+# Underfitting and Overfitting
+
+::: columns
+
+::: {.column width=50%}
+
+- **underfit** the network hasn't yet modeled all relevant patterns in the training data.
+- Eventually validation loss begins to increase while training loss continues to imporve
+  - Generalization has stopped improving, validation metrics stall and then degrade
+- The model is **overfitting**
+  - It is learning patterns specific to the training data (noise)
+
+Overfitting is particularly likely to occur when your data is noisy, if
+it involves uncertainty, or it if includes rare features.
+
+::::
+
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.18]{figures/ch05-1-overfitting-learning-curve}
+\label{fig:ch05-1-overfitting-learning-curve}
+\caption{Canonical overfitting behavior. \parencite[pg.122]{chollet-2021}}
+\end{figure}
+
+
+::::
+
+:::
+
+# Noisy Training Data
+
+::: columns
+
+::: {.column width=33%}
+
+- In real-world datasets, inputs are often **ambiguous** or **invalid**.
+- Even worse, some of the data will be **mislabeled**.
+- If a model goes out of its way to incorporate such outliers, its
+  generalization performance will degrade.
+
+::::
+
+:::: {.column width=66%}
+
+\begin{figure}
+\includegraphics[scale=0.14]{figures/ch05-2-weird-mnist-training-samples}
+\label{fig:ch05-2-weird-mnist-training-samples}
+\caption{Weird MNIST training samples, what are these? \parencite[pg.123]{chollet-2021}}
+\end{figure}
+
+\begin{figure}
+\includegraphics[scale=0.1]{figures/ch05-3-mislabeled-mnist-training-samples}
+\label{fig:ch05-mislabeled-mnist-training-samples}
+\caption{Mislabeled MNIST training samples? \parencite[pg.123]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::
+
+
+# Dealing with Outliers: Robust fit vs. Overfitting
+
+::: columns
+
+::: {.column width=66%}
+
+\begin{figure}
+\includegraphics[scale=0.22]{figures/ch05-4-dealing-with-outliers}
+\label{fig:ch05-4-dealing-with-outliers}
+\caption{Dealing with outliers: robust fit vs. overfitting. \parencite[pg.124]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- If a model goes out of its way to incorporate such outliers (ambiguous,
+  mislabeled, noisy), its generalization performance will degrade.
+- On the right, a model that overfits goes out of its way to incorporate examples
+  that may be mislabeled.
+- On the left, this model probably will generalize much better by ignoring outliers.
+
+::::
+
+:::
+
+# Ambiguous Features
+
+::: columns
+
+::: {.column width=66%}
+
+\begin{figure}
+\includegraphics[scale=0.18]{figures/ch05-5-robust-vs-overfitting}
+\label{fig:ch05-5-robust-vs-overfitting}
+\caption{Robust fit vs. overfitting giving an ambiguous area of the feature space. \parencite[pg.124]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=33%}
+
+- Not all data noise comes from inaccuracies
+  - Even clean and correctly labeled data can be noisy.
+- For example, the area of uncertainity might represent noise where it
+  is difficult to differentiate between the two classes.
+- A model that overfits on such noisy data will be too confident about
+  ambiguous regions of the feature space.
+
+::::
+
+:::
+
+# Rare Features and Spurious Correlations
+
+- Machine learning models trained on datasets that include rare
+  features are highly susceptible to overfitting.
+- Spurious correlations are present even in noise.
+- Example training MNIST and adding noise vs. just 0's.
+
+# The Nature of Generalization in Deep Learning
+
+- A deep learning model can be trained to fit anything, as long as it
+  has enough representational power.
+- You can get training loss on completely random noise. (see example)
+- How can deep learning models generalize?
+  - When learning noise like this example, are basically learning an ad hoc
+    mapping between training inputs and targets, like a fancy `dict`
+
+# The Manifold Hypothesis
+
+::: columns
+
+::: {.column width=25%}
+
+\begin{block}{Manifold Hypothesis}
+The \textbf{Manifold Hypothesis} posits that all natural data lies on a 
+low-dimensional manifold within the high-dimensional space where it is encoded.
+\end{block}
+
+::::
+
+:::: {.column width=75%}
+
+- Take MNIST dataset, total  possible inputs is $256^{28 \times 28}$
+- Very few of these inputs would look like a digit.
+  - actual digits occupy a tiny *subspace* of the possible space
+  - not a random subspace, it is **continuous**
+  - all samples in the subspace are *connected* by smooth paths
+- Handwritten digits form a **manifold** within the space of possible inputs.
+
+The manifold hypothesis implies that:
+
+- Machine learning models only have to fit relatively simple, low-dimensional
+  highly structured supspaces within their potential input space.
+- It's always possible to **interpolate** between two inputs.
+
+**The ability to interpolate between samples is the key to understanding generalization
+in deep learning.**
+
+::::
+
+:::
+
+# Interpolation as a Source of Generalization
+
+::: columns
+
+::: {.column width=33%}
+
+- You can make sense of the **totality** of the space using only a **sample** of the space.
+- Interpolation along a manifold is different from linear interpolation in the parent space.
+- Interpolation can only help you make sens of things that are close to what you've seen before.
+
+
+::::
+
+:::: {.column width=66%}
+
+\begin{figure}
+\includegraphics[scale=0.22]{figures/ch05-8-interpolation}
+\label{fig:ch05-8-interpolation}
+\caption{Difference between linear interpolation and interpolation on
+the latent manifold.  Every point on the latent manifold of digits
+is a valid digit, but the average ot two digits usually isn't. \parencite[pg.124]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::
+
+# Why Deep Learning Works
+
+
+::: columns
+
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.8]{figures/ch02-14-complicated-manifold}
+\label{fig:ch02-14-complicated-manifold}
+\caption{Uncrumpling a complicated manifold of data. \parencite[pg.130]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=50%}
+
+- A deep learning model is a tool for uncrumpling paper balls, that is for disentangling
+  latent manifolds.
+- A deep learning model is basically a very high-dimensional curve
+  - smooth and continuous (since differentiable)
+  - curve fitted to data via gradient descent (smoothly and incrementally)
+
+::::
+
+:::
+
+# Why Deep Learning Works
+
+
+::: columns
+
+::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.125]{figures/ch05-10-random-robust-fit}
+\label{fig:ch05-10-random-robust-fit}
+\caption{Going from a random model to an overfit model, and achieving a robust
+fit as an intermediate state. \parencite[pg.131]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=40%}
+
+- The curve involves enough parameters that it could fit anything (even noise)
+- **At some intermediate point during training the model roughly approximates the
+  natural manifold of the data.**
+- Deep learning models implement a smooth, continuous mapping from
+  inputs to outputs. (differentiable)
+- Deep learning models structured in a way that mirrors *shape* of the
+  information in training data.
+
+::::
+
+:::
+
+# Training Data is Paramount
+
+
+::: columns
+
+::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.17]{figures/ch05-11-dense-sampling}
+\label{fig:ch05-11-dense-sampling}
+\caption{A dense sampling of the input space is necessary in order to learn
+a model capable of accurate generalization. \parencite[pg.131]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=40%}
+
+- The power to generalize is a consequence of the natural structure of your data.
+- Data curation and feature engineering are essential.
+- For a model to perform well **it needs to be trained on a dense sampling of its input space**.
+- The best way to improve a deep learning model is to train it on more data or better data.
+
+::::
+
+:::
+
+# 
+\title{L05.2 Evaluating Machine Learning Models}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.2}
+\maketitle
+
+# 
+\title{L05.3 Improving Model Fit}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.3}
+\maketitle
+
+# 
+\title{L05.4 Improving Generalization}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.4}
+\maketitle
+
+
+# Bibliography
+\tiny
+\printbibliography

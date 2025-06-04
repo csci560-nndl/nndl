@@ -11,7 +11,9 @@ rule all:
 	         "llm-ethics-issues.pdf", \
 	         "l01-what-is-deep-learning.pdf", \
 	         "l02-mathematical-building-blocks-nn.pdf",\
-                 "l03-introduction-keras-tensorflow.pdf"]
+             "l03-introduction-keras-tensorflow.pdf",\
+			 "l04-getting-started-NN-classification-regression.pdf",\
+			 "l05-fundamentals-machine-learning.pdf"]
 
 rule pmd_to_md:
 	input:  "{file}.pmd"
