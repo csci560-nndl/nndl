@@ -1,0 +1,41 @@
+---
+title: "L07: Working with Keras: A deep dive"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 7"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# 
+\title{L07.2 Keras APIs for Building Models}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 7.2}
+\maketitle
+
+# 
+\title{L07.3 Metrics, Callbacks and TensorBoard}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 7.3}
+\maketitle
+
+# 
+\title{L07.4 Writing your own Training and Evaluation Loops}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 7.4}
+\maketitle
+
+# Bibliography
+\tiny
+\printbibliography

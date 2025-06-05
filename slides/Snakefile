@@ -13,7 +13,8 @@ rule all:
 	         "l02-mathematical-building-blocks-nn.pdf",\
              "l03-introduction-keras-tensorflow.pdf",\
 			 "l04-getting-started-NN-classification-regression.pdf",\
-			 "l05-fundamentals-machine-learning.pdf"]
+			 "l05-fundamentals-machine-learning.pdf",\
+			 "l07-keras-api.pdf"]
 
 rule pmd_to_md:
 	input:  "{file}.pmd"
