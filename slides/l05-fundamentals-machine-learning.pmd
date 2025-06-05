@@ -307,6 +307,7 @@ fit as an intermediate state. \parencite[pg.131]{chollet-2021}}
 ::: columns
 
 ::: {.column width=60%}
+
 \begin{figure}
 \includegraphics[scale=0.17]{figures/ch05-11-dense-sampling}
 \label{fig:ch05-11-dense-sampling}
@@ -332,6 +333,121 @@ a model capable of accurate generalization. \parencite[pg.131]{chollet-2021}}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.2}
 \maketitle
 
+# Training Validation and Test sets
+
+::: columns
+
+::: {.column width=33%}
+
+\begin{block}{Train / Validate / Test}
+You can only control what you can observe
+\end{block}
+
+::::
+
+:::: {.column width=66%}
+
+- It's essential to be able to reliably measure the generalization power of your model.
+- You of course need some **training data** to train the model on, this is supervised learning.
+- Developing a model always involves tuning its configuration.
+- You need a feedback signal of the model performance while training: **validation data**
+- Can **overfit to the validation set**, thus need a final **test set**
+
+::::
+
+:::
+
+# Simple Holdout Validation
+
+::: columns
+
+::: {.column width=60%}
+
+\begin{figure}
+\includegraphics[scale=0.5]{figures/ch05-12-holdout-validation}
+\label{fig:ch05-12-holdout-validation}
+\caption{Simple holdout validation split. \parencite[pg.134]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=40%}
+
+- Simple holdout validation is what we have mostly been using so far
+- You can ask `keras` fit method to hold out some random part of the
+  test data for validaiton for you.
+- In order to prevent information leaks, you shouldn't tune your model based on the test set.
+
+::::
+
+:::
+
+# K-Fold Cross-Validation
+
+::: columns
+
+::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.13]{figures/ch05-13-k-fold-validation}
+\label{fig:ch05-13-k-fold-validation}
+\caption{K-fold cross-validation with K=3 folds \parencite[pg.135]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=50%}
+
+- If little data is available then your validation and test sets may contain too few
+  samples to be statistically representative of the data.
+- If different random shuffling rounds of data yield very different measures of performance,
+  then you have this issue.
+- K-fold validation and iterated K-fold validation can address this problem.
+- Split data into `K` partitions of equal size.
+- For each partition `i` train a model on the remaining `K-1` partitions and evaluate on
+  partition `i`
+
+::::
+
+:::
+
+# Iterated K-Fold Validation with Shuffling
+
+
+- When have very little data available and need to evaluate model as precisely as possible.
+- Apply K-fold cross-validation multiple times
+  - Helpful if can call a K-fold with random shuffle as a reusable function.
+- Final score is the average of the K-fold iterations (where are averages over K trainings).
+- Expensive, end up training $P \times K$ models where $P$ is number of K-fold iterations and $K$
+  is number of folds used each time.
+
+# Beating a Common-Sense Baseline
+
+- The only feedback you have is your validation metrics.
+- Particularly important to tell whether or not you are actually able to predict anything at all or not.
+- Before you start working with a dataset, you should always pick a trivial baseline that you'll try to beat.
+  - If you beat that threshold, you'll know your model is at least doing something.
+
+- If you have a binary classification problem where 90% of samples belong to class A, a classifier that always
+  picks A achieves 90% accuracy.
+- For classification, picking at random is often a basic baseline to beat.
+- For regression, always guessing the mean or median output value is a low baseline.
+
+# Things to Keep in Mind about Model Evaluation
+
+- **Data representativeness** You want both your training set and test set to be representative of the data at hand.
+  For this reason you usually should at least **randomly shuffle** your data before splitting it into training and test sets.
+- **The arrow of time** On the other hand, f you are doing time series prediction, you should **NOT** randomly shuffle your data
+  before splitting it, this will cause **temporal leak**.  Instead always make sure all data in test set is *posterior* to the
+  data in the training set.
+- **Redundancy in your data** Be careful of repeated data points appearing multiple times in a dataset (not uncommon).  If you
+  split a repeated sample and end up with it in the train and test set, you'll be leaking information and essentially testing
+  with part of the data you trained with.
+
+Having a reliable way to evaluate the performance of your model is how you’ll be able
+to monitor the tension at the heart of machine learning—between optimization and
+generalization, underfitting and overfitting.
+
 # 
 \title{L05.3 Improving Model Fit}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.3}
@@ -341,6 +457,70 @@ a model capable of accurate generalization. \parencite[pg.131]{chollet-2021}}
 \title{L05.4 Improving Generalization}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 5.4}
 \maketitle
+
+# Dataset Curation
+
+Generalization in a deep learning model originates from the latent structure of your data.
+(You are only as good as your data).
+
+- Make sure you have enough data. 
+  - You need a **dense sampling** of the input-cross-output space.
+- Minimize labeling errors
+  - visualize your inputs and check for anomalies and outliers, proffread your labels.
+- Clean your data and deal with missing values.
+- Do feature selection, analyze correlation or importance of features in a decision tree.
+
+# Feature Engineering
+
+- **Feature Engineering** is the process of using your own knowledge about the data to make
+  the algorithms work easier
+- The essence of feature engineering: making a problem easier by expressing it in a simple way.
+
+# Using Early Stopping
+
+In deep learning we always have models that are vastly operparamiterized: they have way
+more degrees of freedom than the minimum necessary to fit to the laten manifold.
+
+- **You never fully fit a deep learning model**.
+- Finding the exact point during training where generalization (validation loss) starts to decrease
+  is one of the most effective things you can do to improve generalization.
+
+# Regularizing your Model
+
+Regularization techniques are a set of best practices that actively impede the model’s ability
+to fit perfectly to the training data, with the goal of making the model perform better
+during validation.
+
+
+# Adding Dropout
+
+::: columns
+
+::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch05-20-dropout}
+\label{fig:ch05-20-dropout}
+\caption{Dropout applied to an activation matrix at training time, with rescaling
+happening during training.  At test time the activation matrix is unchanged. \parencite[pg.150]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=50%}
+
+- **Dropout** is one of the most effective and most commonly used regularization techniques for
+  neural networks.
+- Dropout, applied to a layer, consists of randomly *dropping out* (setting to 0) a number of
+  output features during training.
+- The **dropout rate** is the fraction of the features that are zeroed out.
+- At test time, we scale down output by the dropout rate.
+- The core idea is that introducing noise in the output values of a layer can break up happenstance patterns
+  that aren't significant.
+
+::::
+
+:::
 
 
 # Bibliography
