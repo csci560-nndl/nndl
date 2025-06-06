@@ -13,3 +13,4 @@ dependencies:
 - jupyter
 - jupyterlab
 - twisted
+- pydot
