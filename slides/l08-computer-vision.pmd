@@ -1,0 +1,202 @@
+---
+title: "L08: Introduction to Deep Learning for Computer Visison"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 8"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# 
+\title{L08.1 Introduction to Convnets}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 8.1}
+\maketitle
+
+# The Convolution Operation
+
+::: columns
+
+::: {.column width=60%}
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch08-1-2d-image-local-patterns}
+\label{fig:ch08-1-2d-image-local-patterns}
+\caption{Images can be broken into local patterns such as edges, textures, and so on. \parencite[pg.204]{chollet-2021}}
+\end{figure}
+
+::::
+
+:::: {.column width=40%}
+
+The fundamental difference between a densley connected layer and a convolution
+layer is this:
+
+- `Dense` layers learn global patterns in their (flattened vector) input feature space
+- `Conv2D` layers learn local patterns, in the case of images, patterns found in small 2D windows
+   of the input.
+
+::::
+
+:::
+
+# First Key Property of convnets - Translation-Invariance
+
+The patterns that a convnet learns are **translation-invariant**.
+
+- After learning a pattern in the lower-right corner, a convnet can recognize it anywhere.
+- This makes convnets data-efficient because *the visual world is fundamentally translation
+  invariant*.
+
+# Second Key Property of convnets - Spatial Hierarchies
+
+::: columns
+::: {.column width=60%}
+
+
+\begin{figure}
+\includegraphics[scale=0.18]{figures/ch08-2-spatial-hierarchy-of-patterns}
+\label{fig:ch08-2-spatial-hierarchy-of-patterns}
+\caption{The visual world forms a spatial hierarchy of visual modules:
+elementary lines or textures combine into simple objects such as eyes
+or ears, which combine into high-level concepts such as "cat". \parencite[pg.204]{chollet-2021}}
+\end{figure}
+
+::::
+:::: {.column width=40%}
+
+Convnets are capable of learning **spatial hierarchies** of patterns.
+
+- A first convolutional layer will learn small patterns such as edges
+- A second conv layer learns larger patterns made of the first layer patterns
+  (like eyes or ears in the figure).
+
+This allows convnets to efficiently learn increasingly complex and abstract visual
+concepts because *the visual world is fundamentally spatially hierarchical*.
+::::
+:::
+
+# The Convolution Operation (again)
+
+- Convolutions operate over rank-3 tensors called **feature maps**
+  - two spatial axes (height and width)
+  - depth axis
+- Convolution operation extracts patches (`kernel_size`) and applies same transformation
+  to all these patches.
+- The output feature map is a rank-3 tensor
+  - it has wiedth and height
+  - Its depth is arbitrary (`filters`)
+- **Filters** encode specific aspects of the input data, and detect it in a patch or not.
+- At a high level a single filter could encode the concept "presence of a face"
+
+# MNIST Convolutions
+
+::: columns
+::: {.column width=40%}
+- First convolution layer takes input feature map of size `(28, 28, 1)`
+- Outputs feature map of size `(26, 26, 32)`
+- It computes 32 filters over its input.
+- Each of these 32 output channels contains a 26x26 grid of values
+  - which is a **respnse map** of the filter over the input, indicating response
+    of that pattern at image locations.
+::::
+:::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.24]{figures/ch08-3-response-map}
+\label{fig:ch08-3-response-map}
+\caption{The concept of a response map: a 2D map of the presence of a pattern
+at different locations in an input. \parencite[pg.204]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+# Feature Maps
+
+- **Feature map**: every dimension in the depth axis is a *feature*
+  or *filter*
+- The rank-2 tensor `output[:, :, n]` is the 2D spatial *map* of the response of this
+  filter over the input.
+
+Convolutions are defined by two key parameters:
+
+1. Size of the patches extracted from inputs - typically 3x3 or 5x5.
+2. Depth of the output feature map - number of filters/features discovered by the convolution.
+
+# How Convolution Works
+
+::: columns
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch08-4-how-convolution-works}
+\label{fig:ch08-4-how-convolution-works}
+\caption{How convolution works. \parencite[pg.207]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=50%}
+- Slide window (e.g. 3x3) over the 3D input feature map.
+- Each such 3D patch is transformed into a 1D vector
+  - by tensor product of **convolution kernel** with the patch
+- All vectors (one per patch) are spatially reassembled into 3D output map
+
+Note: output widthxheight is 3x3 because of the sliding
+::::
+:::
+
+# Understanding Border Effects
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch08-5-sliding}
+\label{fig:ch08-5-sliding}
+\caption{Valid locations of 3x3 patches in a 5x5 input feature map. \parencite[pg.208]{chollet-2021}}
+\end{figure}
+
+# Padding and Striding
+
+- **Padding** consists of adding an appropriate number of rows and columns on each side of the input 
+  feature map so as to fit center convolution windows around every input tile.
+- **Strided convolutions**: distance between two successive windows 
+  - Using stride 2 means the width and height of the feature map are downsampled by a factor of 2
+- In classification models, instead of strides, tend to use the **max-pooling** operation to
+  downsample feature maps.
+ 
+# Add Padding to Keep Spatial Dimensions
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch08-6-padding}
+\label{fig:ch08-6-padding}
+\caption{Padding a 5x5 input in order to be able to extract 25 3x3 patches. \parencite[pg.208]{chollet-2021}}
+\end{figure}
+
+# Understanding Convolution Strides
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch08-7-strides}
+\label{fig:ch08-7-strides}  
+\caption{3x3 convolution patches with 2x2 strides. \parencite[pg.209]{chollet-2021}}
+\end{figure}
+
+# The Max-pooling Operation
+
+- You may have noticed that the size of the feature maps is halved after every `MaxPooling2D` layer.
+- The role of max pooling: to aggressively downsample feature maps.
+- Similar to convolutions, slide windows and transform local patches.  But a simple `max` is done
+  rather than a tensor transformation 
+- Usually use max pooling with 2x2 window and stride 2.
+- Usually use convolution with 3x3 window and no stride (stride 1).
+
+# Bibliography
+\tiny
+\printbibliography
