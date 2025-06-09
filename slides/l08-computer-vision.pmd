@@ -197,6 +197,38 @@ Note: output widthxheight is 3x3 because of the sliding
 - Usually use max pooling with 2x2 window and stride 2.
 - Usually use convolution with 3x3 window and no stride (stride 1).
 
+# 
+\title{L08.2 Training a Convnet from Scratch on a Small Dataset}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 8.2}
+\maketitle
+
+# 
+\title{L08.3 Leveraging a Pretrained Model}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 8.3}
+\maketitle
+
+# Feature Extraction with a Pretrained Model
+
+::: columns
+::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.18]{figures/ch08-12-swapping-classifier-pretrained-base}
+\label{fig:ch08-12-swapping-classifier-pretrained-base}
+\caption{Swapping classifiers while keeping the same convolutional base. \parencite[pg.204]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=40%}
+- Feature extraction consists of using the representations learned by a previously
+  trained model to extract interesting features from new samples.
+- Convnets for image classification have 2 parts
+  1. series of pooling and convolution layers (feature hierarchy)
+  2. densley conected final classifier
+- The feature hierarchy is called the **convolutional base** of the model
+- It has prelearned low to high level features that can be reused.
+::::
+:::
+
+
 # Bibliography
 \tiny
 \printbibliography
