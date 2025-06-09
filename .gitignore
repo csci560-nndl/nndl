@@ -4,7 +4,10 @@
 *.vagrant/*
 .Trash-*/*
 .virtual_documents/*
-
+assg/*
+data/cats_vs_dogs_small/*
+data/dogs_vs_cats/*
+data/pets_dataset_orig/*
 
 *.keras
 *.v2

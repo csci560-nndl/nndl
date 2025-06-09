@@ -378,6 +378,24 @@ It results in smaller models that converge faster and are less prone to overfitt
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 9.4}
 \maketitle
 
+# Interpreting what Convnets Learn
+
+- A fundamental problem when building a computer vision applicaiton is that of **interpretability**
+- Deep learning models are "black boxes": they learn representations that are difficult to extract and explain
+  to humans
+- However, while this is true for most deep learning networks, because of the hierarchical set of features
+  learned by convolution layers, we can interpret how convnets work.
+- The representations learned by convnets are highly amenable to visualization, because they're
+  **representations of visual concepts**
+
+# Techniques for Visualizing Convnet Representations
+
+- **visualizing intermediate convnet outputs (intermediate activations)** Useful for understanding
+  how successive convnet layers transform their input, and meaning of convnet filters.
+- **visualizing convnet filters** Useful for understanding precisely what visual pattern or concept each filter in a convnet is
+  receptive to.
+- **visualizing heatmaps of class activation in an image** Useful for understanding which parts of an image were 
+  identified as belonging to a given class.
 
 
 # Bibliography
