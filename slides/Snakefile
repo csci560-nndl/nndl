@@ -15,7 +15,8 @@ rule all:
 			 "l04-getting-started-NN-classification-regression.pdf",\
 			 "l05-fundamentals-machine-learning.pdf",\
 			 "l07-keras-api.pdf",\
-			 "l08-computer-vision.pdf"]
+			 "l08-computer-vision.pdf",\
+			 "l09-advanced-computer-vision.pdf"]
 
 rule pmd_to_md:
 	input:  "{file}.pmd"

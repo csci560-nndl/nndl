@@ -1,0 +1,83 @@
+---
+title: "L09: Advanced Deep Learning for Computer Vision"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 9"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+---
+
+# 
+\title{L09.1 Three Essential Computer Vision Tasks}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 9.1}
+\maketitle
+
+# The Three Main Computer Vision Tasks
+
+::: columns
+::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch09-1-three-computer-vision-tasks}
+\label{fig:ch09-1-three-computer-vision-tasks}
+\caption{The three main comuter vision tasks: classification, segmentation, detection. \parencite[pg.239]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=40%}
+- **Image classification** goal is to assign one or more labels to whole image.
+- **Image segmentation** goal is to "segment" or "partition" an image into different areas.
+- **Object detection** goal is to draw **bounding boxes** around objects of interest and classify.
+::::
+:::
+
+
+# 
+\title{L09.2 An Image Segmentation Example}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 9.2}
+\maketitle
+
+# Semantic vs. Instance Segmentation
+
+::: columns
+::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch09-2-semantic-instance-segmentation}
+\label{fig:ch09-2-semantic-instance-segmentation}
+\caption{Semantic segmentation vs. instance segmentation. \parencite[pg.241]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=40%}
+- **Semantic segmentation** each pixel is independently classified.
+- **Instance segmentation** seeks not only to classify image pixels by category, but also to parse out individual object instances.
+::::
+:::
+
+
+# 
+\title{L09.3 Modern Convnet Architecture Patterns}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 9.3}
+\maketitle
+
+# 
+\title{L09.4 Interpreting what Convnets Learn}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 9.4}
+\maketitle
+
+
+
+# Bibliography
+\tiny
+\printbibliography
