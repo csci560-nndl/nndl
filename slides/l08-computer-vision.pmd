@@ -197,6 +197,14 @@ Note: output widthxheight is 3x3 because of the sliding
 - Usually use max pooling with 2x2 window and stride 2.
 - Usually use convolution with 3x3 window and no stride (stride 1).
 
+# Summary of Convnets, Convolutions and Max Pooling
+
+- The visual world is fundamentally **translation-invariant**, convolutions learn translation-invariant kernels.
+- The visual world is fundamentally **spatially hierarchical**, successive convoluton layers are capable of learning increasingly high-level spatial herarchies.
+- Convoultion layers operate by sliding a window to extract patches, and applies convolution kernel learned to each pass.
+- Every dimension in the depth axis from a convolution is a **feature map**.
+- The role of max pooling is to aggressively downsample feature maps.
+
 # 
 \title{L08.2 Training a Convnet from Scratch on a Small Dataset}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 8.2}
@@ -206,6 +214,35 @@ Note: output widthxheight is 3x3 because of the sliding
 \title{L08.3 Leveraging a Pretrained Model}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 8.3}
 \maketitle
+
+# Leveraging Pretrained Models Summary
+
+- Pretrained models on large imaging datasets are available through the Keras API and from other methods.
+- The convolutional layers of such pretrained models have learned a powerful and useful hierarchy of
+  features, from the low level to the more abstract.
+- Leveraging a pretrained model can help get excelent image classification results if even only have a (relatively) small set of images to train with.
+- There are two basic approaches to using a pretrained model
+  1. Extract features by passing inputs into pretrained model and gathering last convolutional layer outputs.  This is computationally faster, but you can't
+     use data augmentation or other fine tuning techniques with this approach.
+  2. Freeze the weights of the pretrained model and add in your data augmentation stage before and classifier after, and retrain from begin to end using
+     your data augmentation.  Computationally more expensive but can be fine-tuned better.
+- Can also help to sometime first train a model with frozen pretrained weights, then unfreeze some of the top layers of the pretrained model and train some more.
+
+# Summary of Introduction to Deep Learning for Computer Vision
+
+- Convnets are the best type of machine learning models for computer vision
+  tasks. It’s possible to train one from scratch even on a very small dataset, with
+  decent results.
+- Convnets work by learning a hierarchy of modular patterns and concepts to
+  represent the visual world.
+- On a small dataset, overfitting will be the main issue. Data augmentation is a
+  powerful way to fight overfitting when you’re working with image data.
+- It’s easy to reuse an existing convnet on a new dataset via feature extraction.
+  This is a valuable technique for working with small image datasets.
+- As a complement to feature extraction, you can use fine-tuning, which adapts to
+  a new problem some of the representations previously learned by an existing
+  model. This pushes performance a bit further.
+
 
 # Feature Extraction with a Pretrained Model
 
