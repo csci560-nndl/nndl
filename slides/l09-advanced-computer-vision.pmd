@@ -109,8 +109,8 @@ header-includes:
 Some convnet architecture best practices we will discuss:
 
 - **residual connections**: fix vanishing gradients by retaining noiseless versions of the input information
-- **batch normalization**
-- **separable convolutions**
+- **batch normalization**: applying normalization to layer outputs, not just the initial data input
+- **depthwise separable convolutions**: independent spatial convolutions per channel/feature
 
 # Modularity, Hierarchy and Reuse
 
@@ -372,6 +372,12 @@ It results in smaller models that converge faster and are less prone to overfitt
   (though reason why these work remain controversial, may also just be helping reduce vanishing gradients).
 - It can be beneficial to replace `Conv2D` layers with `SeparableConv2D` layers, which are more
   parameter-efficient.
+
+# 
+\title{L09.3.5 A Mini Xception-like Model Example}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 9.3.5}
+\maketitle
+
 
 # 
 \title{L09.4 Interpreting what Convnets Learn}

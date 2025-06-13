@@ -1,0 +1,263 @@
+---
+title: "L10: Deep Learning for Timeseries"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 10"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+  - \usepackage{comment}
+---
+
+#
+\title{L10.1 Different Kinds of Timseries Tasks}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 10.1}
+\maketitle
+
+# Timeseries Datasets
+
+- A **timeseries** can be any data obtained via measurments at regular intervals.
+- Examples include:
+  - Daily price of a stock
+  - Hourly electricity consumption of a city
+  - Weekly sales of a store
+  - Speech input sound waves caputerd at 8kHz (8,0000 sample per second)
+- Working with timeseries involves understanding the **dynamics** of a system:
+  - its periodic cycles
+  - how it trends over time
+  - its regular regime and its sudden spikes
+
+# Kinds of Timeseries Tasks
+
+- **Forecasting**: predicting what will happen next in a timeseries.
+  - The most common, for example forcast electricity consumption a few hours in advance so
+    can anticipate demand.
+- **Classification**: Assign one or more categorical labels to a timeseries.
+  - Given timeseries activity of a visitor on a website, classify whether visitor is bot or human
+- **Event detection**: Identify the occurrence of a specific expected event within a continuous data stream.
+  - *hotword detection* to monitor a stream and detect utterences like "Hey Alexa"
+- **Anomaly detection**: Detect anything unusual happenning within a continuous datastream.
+  - Unusual credit card timeseries may be fraud
+
+# 
+\title{L10.2 A Temperature Forcasting Example}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 10.2}
+\maketitle
+
+# 
+\title{L10.3 Understanding Recurrent Neural Networks}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 10.3}
+\maketitle
+
+# Understanding Recurrent Neural Networks
+
+::: columns
+::: {.column width=60%}
+- All of the neural networks you've seen so far have no memory.
+  - Each input shown is processed independently with no state kept between inputs.
+  - For a dense network, we flatten five days of data into a single large vector: **feedforward networks**.
+- Biological systems use memory
+  - while reading you process each word one-by-one while keeping memories of what came before.
+- A **recurrent neural network** (RNN) adopts the same principle.
+  - Processes sequences by iterating through the sequence elements and maintaining a **state**
+::::
+:::: {.column width=40%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch10-6-recurrent-network}
+\label{fig:figures/ch10-6-recurrent-network}
+\caption{A recurrent network: a network with a loop. \parencite[pg. 294]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+# Recurrent Operation
+
+- A **recurrent neural network** (RNN) adopts the same principle.
+  - Processes sequences by iterating through the sequence elements and maintaining a **state**
+- The state of the RNN is reset between processing two different sequences, so you still consider one
+  sequence to be a single input.
+- What changes is that this data point is no longer processed in a single step
+  - rather, the network internally **loops** over sequence elements
+
+Example implementation of forward pass of a toy RNN:
+
+\tiny
+```{python, evaluate=False}
+# the state at time t
+state_t = 0
+
+# iterate over sequence elements
+for input_t in input_sequence:
+    output_t = f(input_t, state_t)
+    # the previous output becomes the state for the next iteration
+    state_t = output_t
+```
+
+# Recurrent Operation
+
+To be more specific, you can even flesh out the function `f`.  It is a tensor operation
+on the `input_t` and the `state_t`.
+
+\tiny
+```{python, evaluate=False}
+# the state at time t
+state_t = 0
+
+# iterate over sequence elements
+for input_t in input_sequence:
+    output_t = activation(dot(W, input_t) + dot(U, state_t) + b)
+    # the previous output becomes the state for the next iteration
+    state_t = output_t
+```
+
+# RNN Step Function
+
+A RNN is a `for` loop that reuses quantites computed during the previous iteration of the loop.
+
+RNNs are characterized by their step function:
+
+\begin{figure}
+\includegraphics[scale=0.20]{figures/ch10-7-simple-rnn-unrolled}
+\label{fig:ch10-7-simple-rnn-unrolled}
+\caption{A simple RNN, unrolled over time. \parencite[pg.295]{chollet-2021}}
+\end{figure}
+
+# RNN Layer Output in Keras
+
+- All recurrent layers in Keras `SimpleRNN`, `LSTM` and `GRU` can be run in two different modes
+  1. they can return the full sequences of successive outputs for each time step like we did before,
+     a rank-3 tensor of shape `(batch_size, timesteps, output_features)`
+  2. or they can return only the last output for each input sequence a rank-2 tensor of shape
+     `(batch_size, output_features)`
+
+- These two modes are contolled by the `return_sequences` constructor arguments.
+
+# Limits of the SimpleRNN Layer
+
+- In practice, you'll rarely work with the `SimpleRNN` layer.
+- `SimpleRNN` has a major issue
+  - **vanishing gradient** problem
+  - same as we discussed for deep networks
+  - each loop in a `SimpleRNN` acts like a layer, so if a large number of loops, gradients diminish and are
+    hard to get signal through a simple RNN when performing wegith update.
+- `LSTM` and `GRU` essentially have inner components similar to residual connections to mitigate
+  vanishing gradients.
+
+# LSTM Layer: Avoiding Vanishing Gradients in Recurrent Layers
+
+- A variant of the `SimpleRNN
+- But it adds a way to carry information across many timesteps.
+- Essentially what LSTM does is to save information for later thus
+  preventing older signals from gradually vanishing during processing.
+  - e.g. similar to residual connections
+
+# Going from SimpleRNN to the LSTM
+
+
+- $W_o$, $U_o$ and $b_o$ are the weights at $output_t$
+- LSTM adds in additional dataflow $c_t$ where `C` stands for **carry**.
+- The carry has the following impact
+  - it will be combined with the input connection and the recurrent connection
+    followed by a bias add and the application of an activation function
+  - and it will affect the state being sent to the next timestep
+- Conceptually the carry dataflow is a way to modulate the next output and the next state.
+
+\begin{figure}
+\includegraphics[scale=0.17]{figures/ch10-9-lstm-carry-track}
+\label{fig:ch10-9-lstm-carry-track}
+\caption{Going from a SimpleRNN to an LSTM: adding a carry track. \parencite[pg.298]{chollet-2021}}
+\end{figure}
+
+# Going from SimpleRNN to the LSTM: output and i,f,k activations
+
+- The carry dataflow is computed using 3 distinct transformations.
+- All three have form of a `SimpleRNN` cell transformation.
+- We'll index with letters `i` `f` and `k`
+
+\tiny
+```{python, evaluate=False}
+output_t = activation(dot(state_t, Uo) + dot(input_t, Wo) + dot(c_t, Vo) + bo)
+i_t = activation(dot(state_t, Ui) + dot(input_t, Wi) + bi)
+f_t = activation(dot(state_t, Uf) + dot(input_t, Wf) + bf)
+k_t = activation(dot(state_t, Uk) + dot(input_t, Wi) + bk)
+```
+
+# Going from SimpleRNN to the LSTM: compute the carry
+
+We obtain the new carry state (the next `c_t`) by combining `i_t`, `f_t` and `k_t`
+
+\tiny
+```{python, evaluate=False}
+c_t+1 = c_t * i_t * k_t * f_t
+```
+
+\begin{figure}
+\includegraphics[scale=0.17]{figures/ch10-10-anatomy-lstm}
+\label{fig:ch10-10-anatomy-lstm}
+\caption{Anatomy of an LSTM. \parencite[pg.299]{chollet-2021}}
+\end{figure}
+
+\normalsize
+What these operations **actually** do is determined by the contents of the weights parameterizing them; and
+the weights are learned in an end-to-end fashion, starting over with each training round.
+
+# 
+\title{L10.4 Advanced Use of Recurrent Neural Networks}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 10.4}
+\maketitle
+
+# Bidirectional RNN
+
+::: columns
+::: {.column width=60%}
+- A bidirectional RNN exploits the order sensitivity of RNNS
+- It uses two regular RNNS
+  - One see input in normal chronological order
+  - The other see it in reverse chronological order
+- A bidirectional RNN exploits the idea that, for some problems, reverse order is a different but useful
+  presentation to build representations.
+- Bidirectional RNNs are a gret fit for text data, or any other kind of data where order matters, yet
+  which order you use doesn't matter.
+::::
+:::: {.column width=40%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch10-14-bidirectional-rnn}
+\label{fig:ch10-14-bidirectional-rnn}
+\caption{How a bidirectional RNN layer works. \parencite[pg.306]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+# Summary of Deep Learning for Timeseries
+
+- It’s good to first establish common-sense baselines for your metric of choice. If you don’t
+  have a baseline to beat, you can’t tell whether you’re making real progress.
+- Try simple models before expensive ones, to make sure the additional expense
+  is justified. Sometimes a simple model will turn out to be your best option.
+- When you have data where ordering matters, and in particular for timeseries
+  data, recurrent networks are a great fit and easily outperform models that first flatten
+  the temporal data.
+- The two essential RNN layers available in Keras are the LSTM layer and the GRU layer.
+- To use dropout with recurrent networks, you should use a time-constant dropout
+  mask and recurrent dropout mask.
+  - These are built into Keras recurrent layers,
+    so all you have to do is use the recurrent_dropout arguments.
+- Stacked RNNs provide more representational power than a single RNN layer.
+  They’re also much more expensive and thus not always worth it.
+
+# Bibliography
+\tiny
+\printbibliography

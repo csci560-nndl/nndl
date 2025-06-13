@@ -1,0 +1,111 @@
+---
+title: "L11: Deep Learning for Text"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 11"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+  - \usepackage{comment}
+---
+
+#
+\title{L11.1 Natural Language Processing: The bird's eye view}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.1}
+\maketitle
+
+# Natural vs. Computer Languages
+
+- In computer science, we refer to human languages, like English or Mandarin, as
+  **natural** languages, to distinguish them from languages designed for machines.
+- Every machine language was **designed**: its starting point was a human engineer
+  writing down a se of formal rules to describe the language.
+  - Rules came first.
+- Natural languages are shaped by an evolutionary process, much like biological organisms,
+  that's whats make them *natural*.
+  - Their "rules", like the grammar of English, were formalized after the fact and are often
+    ignored or broken by its users.
+
+Conclusion: While machine-readable languages are highly structured and rigorous, natural
+language is messy - ambiguous, chaotic, sprawling, and constantly in flux.
+  
+# Modern Machine Learning NLP Systems
+
+Using machine learning and large datasets to give computers the ability to *understand* language.
+
+Some examples of types of text processing systems:
+
+- “What’s the topic of this text?” (text classification)
+- “Does this text contain abuse?” (content filtering)
+- “Does this text sound positive or negative?” (sentiment analysis)
+- “What should be the next word in this incomplete sentence?” (language modeling)
+- “How would you say this in German?” (translation)
+- “How would you summarize this article in one paragraph?” (summarization)
+
+In much the same way that computer vision is pattern
+recognition applied to pixels, NLP is pattern recognition applied to words, sentences,
+and paragraphs.
+
+#
+\title{L11.2 Preparing Text Data}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.2}
+\maketitle
+
+# Text Vectorization Process
+
+**Vectorizing** text is the process of transforming text into numeric tensors.
+
+::: columns
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch11-1-text-vectorization}
+\label{fig:ch11-1-text-vectorization}
+\caption{ \parencite[pg.281]{chollet-2021}}
+\end{figure}
+
+::::
+:::: {.column width=50%}
+\vskip 0.3in
+- First, you standardize the text to make it easier to process, such as by converting 
+  it to lowercase or removing punctuation.
+\vskip 0.1in
+- You split the text into units (called tokens), such as characters, words, or groups
+  of words. This is called tokenization.
+\vskip 0.1in
+- You convert each such token into a numerical vector. This will usually involve
+  first indexing all tokens present in the data.
+::::
+:::
+
+
+#
+\title{L11.3 Two Approaches for Representing Groups of Words: sets and sequences}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.3}
+\maketitle
+
+#
+\title{L11.4 The Transformer Architecture}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.4}
+\maketitle
+
+#
+\title{L11.5 Beyond Text Classification: Sequence-to-sequence learning}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.5}
+\maketitle
+
+# Bibliography
+\tiny
+\printbibliography
