@@ -73,7 +73,7 @@ and paragraphs.
 \begin{figure}
 \includegraphics[scale=0.15]{figures/ch11-1-text-vectorization}
 \label{fig:ch11-1-text-vectorization}
-\caption{ \parencite[pg.281]{chollet-2021}}
+\caption{From raw text to vectors. \parencite[pg.312]{chollet-2021}}
 \end{figure}
 
 ::::
@@ -90,11 +90,153 @@ and paragraphs.
 ::::
 :::
 
+# Text Standardization
+
+- A machine learning model doesn't know a priori that "i" and "I" are the same letter,
+  that "\text{\'{e}}" is an "\text{e}" with an accent, or that "staring" and "stared" are two forms of the same verb.
+- Text standardization is a basic form of feature engineering that aims to erase
+  encoding differences that you don’t want your model to have to deal with.
+- Simplest and usually used: convert to lowercase and remove punctuation characters.
+- Also special characters may be standard form, such as replacing accented vowels with unaccented form.
+- **stemming** converting variations of a teerm into a single shared representation
+  - turn "caught" and "been catching" into "[catch]"
+  - plurals often stemmed, "cats" into "[cat]"
+- With these standardization techniques, your model will require less training data and will generalize better.
+
+# Text splitting (tokenization)
+
+**Tokenization**: break up text into units to be vectorized.
+
+Three different approaches:
+
+1. **Word-level tokenization** Where tokens are space-separated (or punctuation separated) 
+   substrings. A variant of this is to further split words into subwords
+   when applicable for instance, treating “staring” as “star+ing” or “called” as
+   “call+ed.”
+2. **N-gram tokenization** Where tokens are groups of N consecutive words. For
+   instance, “the cat” or “he was” would be 2-gram tokens (also called bigrams).
+3. **Character-level tokenization** Where each character is its own token. In practice,
+   this scheme is rarely used, and you only really see it in specialized contexts, like 
+   text generation or speech recognition.
+
+
+# Text-processing Model Types: sequence vs. bag-of-words
+
+There are two kinds of text-processing models:
+
+1. Those that care about word order are called **sequence models**.
+2. Those that treat input words as a set, discarding original order, are called
+   **bag-of-words models**.
+
+If building a sequence model, you'll use word-level tokenization.
+
+If building a bag-of-words model, you'll use N-gram tokenization.
+
+# Understanding N-grams and bag-of-words
+
+- Word N-grams are groups of N (or fewer) consecutive words.
+- For example, given sentence "the cat sat on the mat."
+- 2-grams (or bigrams): `['the cat', 'cat sat', 'sat on', 'on the', 'the mat']`
+- 3-grams (or trigrams): `['the cat sat', 'cat sat on', 'sat on the', 'on the mat']`
+
+Because bag-of-words isn’t an order-preserving tokenization method (the tokens generated
+are understood as a set, not a sequence, and the general structure of the sentences
+is lost), it tends to be used in shallow language-processing models rather than
+in deep learning models.
+
+# Vocabulary Indexing
+
+- Once your text is split into tokens, you need to encode each token into a numerical
+  representation.
+- You could potentially do this in a stateless way, such as by hashing each
+  token into a fixed binary vector
+- In practice, the way you’d go about it is to build an index of all terms found in the training data
+- It's common to restrict the vocabulary to the top N most frequent words, for example 10,000
+- When we look up a new token in the vocabulary index, it may ot necessarily exist.
+  - To handle this, you should use an “out of vocabulary” index (abbreviated as OOV index), a catch-all for any token
+    that wasn’t in the index.
+  - **OOV token**: "out of vocabulary", usually token index 1
+  - **mask token**: "ignore me not a word", usually token index 0
+
 
 #
 \title{L11.3 Two Approaches for Representing Groups of Words: sets and sequences}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.3}
 \maketitle
+
+# How to Encode Word Order
+
+- How to represent **individual words** is relatively uncontroversial: they're categorical features and we
+  assign an integer index (dimension number) and vectorize (encode as dimensions in a feature space).
+- More problematic question: how to encode **the way words are woven into sentences**: word order.
+- Unlike many other types of timeseries, words in most natuaral languages don't have a canonical order.
+  - Order is clearly important, but its relationship to meaning (in natural languages) isn't straight forward.
+
+\vskip 0.2in
+- Simplest approach: discard order and treat as unordered set: **bag-of-words models**
+- Process strictly in order they appear, like steps in a timeseries: **sequence models**
+- Hybrid approach: **Transformer architecture** technically order-agnostic, yet injects word-postiion info into representations.
+
+# Understanding Word Embeddings
+
+::: columns
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.14]{figures/ch11-2-word-embeddings}
+\label{fig:ch11-2-word-embeddings}
+\caption{Word representations obtained from one-hot encoding are sparse,
+high-dimensional and hardcoded.  Word embeddings are dense, relatively low-dimensional,
+and learned from data. \parencite[pg.330]{chollet-2021}}
+\end{figure}
+
+::::
+:::: {.column width=50%}
+- One-hot encoding assumes that different okens are **all independent from each other**. (one-hot vectors are all orthonal to one another).
+- The **geometric relationship** between two word vectors should reflect the **semantic relationship** between these words.
+  - In a reasonable word vector space, similar words should be encoded in similar vectors.
+  - e.g. the vector for "film" and "movie" should be about the same vector.
+- **Word embeddings** are vector representations of words that achieve exactly this: they map human language into a structured geometric space.
+::::
+:::
+
+# Example of Word Embedding Space
+
+::: columns
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.14]{figures/ch11-3-example-word-embedding-space}
+\label{fig:ch11-3-example-word-embedding-space}
+\caption{A toy example of a word embedding space.\parencite[pg.330]{chollet-2021}}
+\end{figure}
+
+::::
+:::: {.column width=50%}
+- 4 words embedded on a 2D plane: cat, dog, wolf and tiger
+- Same vector from "dog" to "wolf" and "cat" to "tiger"
+  - semantics "from pet to wild animal"
+- Similar same vector from "dog" to "cat" as "wolf" to "tiger"
+  - semantics "from canine to feline"
+::::
+:::
+
+# Two Ways to Obtain Word Embeddings
+
+- Learn word embeddings jointly with the main task you care about (such as document
+  classification or sentiment prediction).
+  - In this setup, you start with random word vectors and then learn word vectors in the same way you learn the
+    weights of a neural network.
+- Load into your model word embeddings that were precomputed using a different
+  machine learning task than the one you’re trying to solve.
+  - These are called pretrained word embeddings.
+
+# Summary of Representing Groups of Words
+
+- Word order in Text processing is handled in 2 basic ways:
+  1. **bag-of-words models** : discard order and treat as an unordered set (multi-hot encoding typically, 20,000 sparse vectors).
+  2. **sequence models**: process words in order they appear like a timeseries
+- For sequence models, can encode sequence again using one-hot encoding, but this ends up with very large input to RNN models.
+- **word embeddings** are vector representations of words that map humanlanguage into a structured geometric space.
+
 
 #
 \title{L11.4 The Transformer Architecture}
