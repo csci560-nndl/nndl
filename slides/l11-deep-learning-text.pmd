@@ -510,8 +510,7 @@ example applications:
 
 # Template of Sequence-to-sequence Learning
 
-::: columns
-::: {.column width=66%}
+
 \begin{figure}
 \includegraphics[scale=0.15]{figures/ch11-12-sequence-to-sequence-learning}
 \label{fig:ch11-12-sequence-to-sequence-learning}
@@ -521,14 +520,64 @@ far and predicts the target sequence offset by one step in the future.
 During inference, we generate one target token at a time and feed it back into
 the decoder. \parencite[pg.351]{chollet-2021}}
 \end{figure}
-::::
-:::: {.column width=50%}
-General template behind sequence-to-sequence models:
+
+# Sequence-to-sequence Training and Inference
+
+General template behind sequence-to-sequence models for training phase:
+
 - An **encoder** model turns the source sequence into an intermediate representation.
 - A **decoder** is trained to predict the next token `i` by looking at both previous
   tokens (0 to `i - 1`) and the encoded source sequence.
-::::
-:::
+
+\vskip 0.1in
+During inference, we don't have the target sequence, we're trying to predict
+it from scratch.  We have to generate one token at a time:
+
+1. Obtain the encoded source sequence form the encoder.
+2. The decoder starts by looking at the encoded source sequence as well as an initial
+   "seed" token, and predicts the first real token.
+3. The predicted sequence so far is fed back into the decoder, which generates the next token
+   and so on, until it generates a stop token. 
+
+
+# The Transformer Decoder
+
+\begin{figure}
+\includegraphics[scale=0.12]{figures/ch11-14-transformer-decoder}
+\label{fig:ch11-14-transformer-decoder}
+\caption{The TransformerDecoder is similar to the TransformerEncoder, except it features an additional
+attention block where the keys and values are the source sequence encoded by the TransformerEncoder.
+Together, the encoder and decoder form an end-to-end Transformer. \parencite[pg.359]{chollet-2021}}
+\end{figure}
+
+# Summary of Sequnce-to-Sequence Learning
+
+- A sequence-to-sequence model takes a sequence as input and translates it into a different sequence.
+- An *encoder* model turns the source sequence into an intermediate representation.
+- A *decoder* takes the encoder output and is trained to predict the next token by looking at both all previous tokens,
+  and the encoded source sequence.
+- The TransformerDecoder is similar to the TransformerEncoder, but has an additional attention layer that receives the encoded output
+  from an encoder.
+
+# Chapter Summary
+
+- There are two kinds of NLP models: bag-of-words models that process sets of words
+  or N-grams without taking into account order, and sequence models that process
+  word order.
+  1. A bag-of-words model is made of Dense layers,
+  2. while a sequence model could be an RNN, a 1D convnet, or a Transformer.
+- Word embeddings are vector spaces where semantic relationships between words are
+  modeled as distance relationships between vectors that represent those words.
+- Sequence-to-sequence learning is a framework that can be
+  applied to solve many NLP problems, including machine translation. A
+  sequence-to-sequence model is made of an encoder, which processes a source sequence,
+  and a decoder, which tries to predict future tokens in target sequence by looking
+  at past tokens, using encoder-processed source sequence.
+- Neural attention is a way to create context-aware word representations. It’s the
+  basis for the Transformer architecture.
+- The Transformer architecture yields excellent results on sequence-to-sequence tasks.
+  The first half, the TransformerEncoder, can also be used for text classification
+  or any sort of single-input NLP task.
 
 
 # Bibliography
