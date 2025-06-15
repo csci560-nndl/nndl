@@ -10,7 +10,7 @@ section-titles: false
 output:
 	beamer_presentation:
 	keep_tex: true
-classoption: aspectratio=169
+classoption: aspectratio=169,table
 header-includes:
   - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
   - \title [Memory]{My Title}
@@ -20,6 +20,7 @@ header-includes:
   - \hypersetup{allcolors=blue, colorlinks=true}
   - \usepackage[percent]{overpic}
   - \usepackage{comment}
+  - \usepackage{array}
 ---
 
 #
@@ -282,7 +283,7 @@ input. \parencite[pg.337]{chollet-2021}}
 ::::
 :::: {.column width=50%}
 - Attention can be used for more than just highlighting or erasing certain features.
-  - Can make features **context-aware**
+- Can make features **context-aware**
   - In an embedding space a single word has a fixed position, a fixed relationship with every other word
   - But in reality, the meaning of a word is **context-specific** so position should shift depending on context.
 - A smart embedding space would provide different vector representation for a word depending on other words around it.
@@ -323,7 +324,7 @@ def self_attention(input_sequence):
     ----------
     input_sequence : numpy array shape (max_tokens, dimensions)
         A single sequence, like a sentence for text, but encoded in a word embedding like space. Each
-        sample is the vector of imbeddings for a single token.
+        sample is the vector of embeddings for a single token.
 
     Returns
     -------
@@ -390,21 +391,145 @@ the match scores are ued to rank "values". \parencite[pg.341]{chollet-2021}}
 ::: {.column width=50%}
 - Output space of the self-attention layer gets factored into independent subspaces: query, key and value.
 - Each vector processed via neural attention, the three outputs are concatenated back together into a single output.
+- Each such subspace is called a "head."
+  - Having independent heads helps the layer learn different groups of features for each token.
 ::::
 :::: {.column width=50%}
 \begin{figure}
-\includegraphics[scale=0.11]{figures/ch11-8-multihead-attention-layer}
+\includegraphics[scale=0.15]{figures/ch11-8-multihead-attention-layer}
 \label{fig:ch11-8-multihead-attention-layer}
 \caption{The Keras MultiHeadAttention layer. \parencite[pg.344]{chollet-2021}}
 \end{figure}
 ::::
 :::
 
+# Transformer Encoder Architecture
+
+::: columns
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.22]{figures/ch11-9-transformer-encoder-architecture}
+\label{fig:ch11-9-transformer-encoder-architecture}
+\caption{The TransformerEncoder chains a MultiHeadAttention layer with a dense projection
+and adds normalization as well as residual connections. \parencite[pg.344]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=50%}
+Roughly the architecture of Transformer encoder
+
+\vskip 0.1in
+- Factoring outputs into multiple independent spaces
+- Adding residual connections
+- Adding normalization layers
+
+\vskip 0.1in
+Together these form the **Transformer encoder**  one of two critical parts that make up the transformer architecture.
+::::
+:::
+
+# Features of NLP Models
+
+::: columns
+::: {.column width=30%}
+- Self-attention is a set-processing mechanism.
+- So why say Transformer is a sequence model?
+  - Have to add **positional encoding**
+::::
+:::: {.column width=70%}
+\rowcolors{2}{gray!15}{white}
+\begin{center}
+\begin{tabular}{ | m{1.2in} | m{1.2in} | m{1.2in} | }
+  \hline
+                    & Word order \mbox{awareness}    & Context \mbox{awareness} \mbox{(cross-words} \mbox{interactions}) \\
+  \hline
+  Bag-of-unigrams   & No                      & No \\
+  Bag-of-bigrams    & Very limited            & No \\
+  RNN               & \cellcolor{green!25}Yes & No \\
+  Self-attention    & No                      & \cellcolor{green!25}Yes \\
+  Transformer       & \cellcolor{green!25}Yes & \cellcolor{green!25}Yes \\
+  \hline
+\end{tabular}
+\end{center}
+::::
+:::
+
+# When to use Sequence Models vs. Bag-of-word Models
+
+::: columns
+::: {.column width=33%}
+\begin{figure}
+\includegraphics[scale=0.22]{figures/ch11-11-heuristic-text-classification-model-type}
+\label{fig:ch11--11-heuristic-text-classification-model-type}
+\caption{A simple heuristic for selecting a text-classification model: the ratio
+between the number of training samples and the mean number of words per sample. \parencite[pg.349]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=66%}
+- May hear that bag-of-word approach is outdated and should be using sequence models for text processing.
+- This is not true, a small stack of `Dense` layers with bigrams was best we got for IMDB sentiment classifier.
+
+\vskip 0.1in
+The argument why is:
+
+- The input of a sequence model represents a richer and more complex space, and thus it takes more data to map out that space
+- Meanwhile, a plain set of terms is a space so simple that you can train a logistic regression
+  on top using just a few hundreds or thousands of samples.
+- In addition, the shorter a sample is, the less the model can afford to discard any of the information it contains,
+  in particular word order becomes more important.
+::::
+:::
+
+# Summary of the Transformer Architecture
+
+- **Neural attention** can be used to build powerful sequence models that don't feature recurrent layers.
+- Make features **context-specific** by computing attention.
+- A smart embedding space provides different vector representations for a word depending on the other words around it.
+- `MultiHeadAttention` layer takes 3 inputs, all using a word embedding encoding.  It outputs embeddings after factoring in self-attention for the sequences.
+- `TransformerEncoder` layer uses multi-head attention as input, and factors outputs into multiple inddpendent spaces, adds residual connections and normalization layers.
+- Bag-of-word models with bi-grams are sill good choices when you may not have enough samples or sample length is large.
+- Sequence models, including transformers, work best with large data and/or small sample size.
 
 #
 \title{L11.5 Beyond Text Classification: Sequence-to-sequence learning}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.5}
 \maketitle
+
+# Sequence-to-sequence models
+
+A sequence-to-sequence model takes a sequence as input, and translates it into a different sequence. Some
+example applications:
+
+- Machine translation—Convert a paragraph in a source language to its equivalent
+  in a target language.
+- Text summarization—Convert a long document to a shorter version that retains
+  the most important information.
+- Question answering—Convert an input question into its answer.
+- Chatbots—Convert a dialogue prompt into a reply to this prompt, or convert the
+  history of a conversation into the next reply in the conversation.
+- Text generation—Convert a text prompt into a paragraph that completes the prompt.
+
+# Template of Sequence-to-sequence Learning
+
+::: columns
+::: {.column width=66%}
+\begin{figure}
+\includegraphics[scale=0.15]{figures/ch11-12-sequence-to-sequence-learning}
+\label{fig:ch11-12-sequence-to-sequence-learning}
+\caption{Sequence-to-sequence learning: the source sequence is processed by the encoder
+and is then sent to the decoder.  The decoder looks at the target sequence so
+far and predicts the target sequence offset by one step in the future.
+During inference, we generate one target token at a time and feed it back into
+the decoder. \parencite[pg.351]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=50%}
+General template behind sequence-to-sequence models:
+- An **encoder** model turns the source sequence into an intermediate representation.
+- A **decoder** is trained to predict the next token `i` by looking at both previous
+  tokens (0 to `i - 1`) and the encoded source sequence.
+::::
+:::
+
 
 # Bibliography
 \tiny
