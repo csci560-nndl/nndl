@@ -243,6 +243,164 @@ and learned from data. \parencite[pg.330]{chollet-2021}}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.4}
 \maketitle
 
+# The Transformer Architecture
+
+- Starting 2017 a new model architecture started overtaking recurrent neural networks across
+  most NLP tasks: The Transformer
+- Seminal paper "Attention is all you need",  \cite{vaswani-2017, vaswani-2023}
+- A simple mechanism called **neural attention** could be used to build powerful sequence models
+  that didn't feature any recurrent layers or convolution layers.
+- Neural attention has fast become one of the most influential ides in deep learning.
+  - Models should "pay more attention" to some features and "pay less" to others.
+
+
+# Understanding Self-attention
+
+- As you are reading, you may skim some things and attentively read others, depending on your goals or interests.
+- What if your deep model could do the same?
+- Not all input information seen by a model is equall important to the task at hand.
+
+\vskip 0.1in
+Similar to some past mechanisms:
+
+- Max pooling in convnets looks at pool of features in spatial region and selects
+  just one feature to keep.  All or nothing attention.
+- TF-IDF normalization assigns importance scores to tokens based on "information" different
+  tokens are likely to carry. Important bosted, irrelevant get faded out.
+
+# Computing Self-attention
+
+::: columns
+::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.11]{figures/ch11-5-attention}
+\label{fig:ch11-5-attention}
+\caption{The general concept of "attention" in deep learning: input features get assigned
+"attention scores," which can be used to inform the next representation of the
+input. \parencite[pg.337]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=50%}
+- Attention can be used for more than just highlighting or erasing certain features.
+  - Can make features **context-aware**
+  - In an embedding space a single word has a fixed position, a fixed relationship with every other word
+  - But in reality, the meaning of a word is **context-specific** so position should shift depending on context.
+- A smart embedding space would provide different vector representation for a word depending on other words around it.
+- self-attention modulates the representation of a token by using the representations of related tokens in the sequence.
+::::
+:::
+
+# Computing Self-attention
+
+::: columns
+::: {.column width=40%}
+1. Compute relevancy scores between the vector "station" and every other word (dot product of the word vectors).
+2. Compute sum of all word vectors in sentence weighted by relevance scores.  Resulting vector is our new
+   representation that incorporates surrounding context.
+3. Repeat for each word in sentence **gives new sequence of vectors encoding the sentence!**
+::::
+:::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.11]{figures/ch11-6-computing-attention}
+\label{fig:ch11-6-computing-attention}
+\caption{Self-attention scores are computed between "station" and every other word in the
+sequence, and they are then used to weight a sum of word vectors that becomes the new
+"station" vector. \parencite[pg.338]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+# Pseudocode Implementation of Self-attention
+
+\fontsize{5}{5} \selectfont
+```{python,evaluate=False}
+def self_attention(input_sequence):
+    """The input_sequence is a sequence of encoded vectors from
+    a word embedding like space.  For example, for 600 words encoded
+    in a 100d embedding, it would be shape (600, 100)
+
+    Parameters
+    ----------
+    input_sequence : numpy array shape (max_tokens, dimensions)
+        A single sequence, like a sentence for text, but encoded in a word embedding like space. Each
+        sample is the vector of imbeddings for a single token.
+
+    Returns
+    -------
+    output : numpy array shape (max_tokens, dimensions)
+        Same shape array of token vectors returned, but all of the token vectors has been weighted and
+        summed by attention, so each is now a context-aware token vector.
+    """
+    output = np.zeros(shape=input_sequence.shape)
+    # iterate over each individual token from 0..max_tokens-1
+    for i, pivot_vector in enumerate(input_sequence):
+
+        # step 1 compute relevancy scores e.g. attention 
+        # compute the attention score, which is dot product between the token
+        # and every other token in this input sequence
+        scores = np.zeros(shape=(len(input_sequence),))
+        for j, vector in enumerate(input_sequence):
+            scores[j] = np.dot(pivot_vector, vector.T)
+
+        # scale by a normalization factor and apply softmax, result is probability
+        # distribution that sums up to 1, but still basically importance scores
+        scores /= np.sqrt(input_sequence.shape[1])
+        scores = softmax(scores)
+
+        # now step 2, compute sum of all word vectors, weighted
+        # by relevancy, resulting in new representation of this token
+        new_pivot_representation = np.zeros(shape=pivot_vector.shape)
+        for j, vector in enumerate(input_sequence):
+            new_pivot_representation += vector * scores[j]
+
+        # so on output, the vector representation for token i is the new 
+        # context-aware representation
+        output[i] = new_pivot_representation
+    return output
+```
+
+# Generalized Self-attention: query-key-value model
+
+::: columns
+::: {.column width=50%}
+- A Transformer is a **sequence-to-sequence** model, it was designed to convert one sequence into another.
+- The self-attention mechanism performs the following schematically
+  \newline
+  `outputs = sum(inputs * pairwise_scores(inputs, inputs))`
+- For each token in inputs (A) compute how much it is related to inputs (B)
+- Use these scores to weight a sum of tokens from inputs (C)
+- There is nothing that requires A, B, C to be the same inputs.
+  - call them query-keys-values
+  \newline
+  `outputs = sum(values * pairwise_scores(query, keys))`
+::::
+:::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.11]{figures/ch11-7-query-key-value}
+\label{fig:ch11-7-query-key-value}
+\caption{Retrieving images from a database: the "query" is compared to a set of "keys," and
+the match scores are ued to rank "values". \parencite[pg.341]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+# Multi-head Attention
+
+::: columns
+::: {.column width=50%}
+- Output space of the self-attention layer gets factored into independent subspaces: query, key and value.
+- Each vector processed via neural attention, the three outputs are concatenated back together into a single output.
+::::
+:::: {.column width=50%}
+\begin{figure}
+\includegraphics[scale=0.11]{figures/ch11-8-multihead-attention-layer}
+\label{fig:ch11-8-multihead-attention-layer}
+\caption{The Keras MultiHeadAttention layer. \parencite[pg.344]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+
 #
 \title{L11.5 Beyond Text Classification: Sequence-to-sequence learning}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 11.5}
