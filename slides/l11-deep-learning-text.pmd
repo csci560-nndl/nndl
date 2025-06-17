@@ -153,7 +153,7 @@ in deep learning models.
   token into a fixed binary vector
 - In practice, the way you’d go about it is to build an index of all terms found in the training data
 - It's common to restrict the vocabulary to the top N most frequent words, for example 10,000
-- When we look up a new token in the vocabulary index, it may ot necessarily exist.
+- When we look up a new token in the vocabulary index, it may not necessarily exist.
   - To handle this, you should use an “out of vocabulary” index (abbreviated as OOV index), a catch-all for any token
     that wasn’t in the index.
   - **OOV token**: "out of vocabulary", usually token index 1
@@ -192,7 +192,7 @@ and learned from data. \parencite[pg.330]{chollet-2021}}
 
 ::::
 :::: {.column width=50%}
-- One-hot encoding assumes that different okens are **all independent from each other**. (one-hot vectors are all orthonal to one another).
+- One-hot encoding assumes that different tokens are **all independent from each other**. (one-hot vectors are all orthogonal to one another).
 - The **geometric relationship** between two word vectors should reflect the **semantic relationship** between these words.
   - In a reasonable word vector space, similar words should be encoded in similar vectors.
   - e.g. the vector for "film" and "movie" should be about the same vector.
@@ -236,7 +236,7 @@ and learned from data. \parencite[pg.330]{chollet-2021}}
   1. **bag-of-words models** : discard order and treat as an unordered set (multi-hot encoding typically, 20,000 sparse vectors).
   2. **sequence models**: process words in order they appear like a timeseries
 - For sequence models, can encode sequence again using one-hot encoding, but this ends up with very large input to RNN models.
-- **word embeddings** are vector representations of words that map humanlanguage into a structured geometric space.
+- **word embeddings** are vector representations of words that map human language into a structured geometric space.
 
 
 #
