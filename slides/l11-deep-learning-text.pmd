@@ -99,7 +99,7 @@ and paragraphs.
   encoding differences that you don’t want your model to have to deal with.
 - Simplest and usually used: convert to lowercase and remove punctuation characters.
 - Also special characters may be standard form, such as replacing accented vowels with unaccented form.
-- **stemming** converting variations of a teerm into a single shared representation
+- **stemming** converting variations of a term into a single shared representation
   - turn "caught" and "been catching" into "[catch]"
   - plurals often stemmed, "cats" into "[cat]"
 - With these standardization techniques, your model will require less training data and will generalize better.
@@ -259,7 +259,7 @@ and learned from data. \parencite[pg.330]{chollet-2021}}
 
 - As you are reading, you may skim some things and attentively read others, depending on your goals or interests.
 - What if your deep model could do the same?
-- Not all input information seen by a model is equall important to the task at hand.
+- Not all input information seen by a model is equally important to the task at hand.
 
 \vskip 0.1in
 Similar to some past mechanisms:
@@ -267,7 +267,7 @@ Similar to some past mechanisms:
 - Max pooling in convnets looks at pool of features in spatial region and selects
   just one feature to keep.  All or nothing attention.
 - TF-IDF normalization assigns importance scores to tokens based on "information" different
-  tokens are likely to carry. Important bosted, irrelevant get faded out.
+  tokens are likely to carry. Important boosted, irrelevant get faded out.
 
 # Computing Self-attention
 
@@ -485,7 +485,7 @@ The argument why is:
 - Make features **context-specific** by computing attention.
 - A smart embedding space provides different vector representations for a word depending on the other words around it.
 - `MultiHeadAttention` layer takes 3 inputs, all using a word embedding encoding.  It outputs embeddings after factoring in self-attention for the sequences.
-- `TransformerEncoder` layer uses multi-head attention as input, and factors outputs into multiple inddpendent spaces, adds residual connections and normalization layers.
+- `TransformerEncoder` layer uses multi-head attention as input, and factors outputs into multiple independent spaces, adds residual connections and normalization layers.
 - Bag-of-word models with bi-grams are sill good choices when you may not have enough samples or sample length is large.
 - Sequence models, including transformers, work best with large data and/or small sample size.
 
@@ -550,7 +550,7 @@ attention block where the keys and values are the source sequence encoded by the
 Together, the encoder and decoder form an end-to-end Transformer. \parencite[pg.359]{chollet-2021}}
 \end{figure}
 
-# Summary of Sequnce-to-Sequence Learning
+# Summary of Sequence-to-Sequence Learning
 
 - A sequence-to-sequence model takes a sequence as input and translates it into a different sequence.
 - An *encoder* model turns the source sequence into an intermediate representation.
