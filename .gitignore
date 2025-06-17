@@ -11,6 +11,8 @@ data/pets_dataset_orig/*
 data/aclImdb/*
 data/glove*
 data/spa-eng/*
+data/coco/*
+data/jena*
 
 *.keras
 *.v2
