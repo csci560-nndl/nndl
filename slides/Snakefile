@@ -18,7 +18,8 @@ rule all:
 			 "l08-computer-vision.pdf",\
 			 "l09-advanced-computer-vision.pdf",\
 			 "l10-time-series-rnn.pdf",\
-			 "l11-deep-learning-text.pdf"]
+			 "l11-deep-learning-text.pdf",\
+			 "l12-generative-deep-learning.pdf"]
 
 rule pmd_to_md:
 	input:  "{file}.pmd"

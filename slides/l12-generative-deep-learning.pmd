@@ -1,0 +1,149 @@
+---
+title: "L12: Generative Deep Learning"
+subtitle: "CSci 560 Deep Learning w/ Python (Chollet)  Ch. 12"
+author: Derek Harter
+date: Summer 2025
+theme: Madrid
+
+toc: false
+section-titles: false
+output:
+	beamer_presentation:
+	keep_tex: true
+classoption: aspectratio=169,table
+header-includes:
+  - \logo{\includegraphics[scale=0.18]{figures/tamuc-logo}}
+  - \title [Memory]{My Title}
+  - \institute[East Texas A\&M]{Department of Computer Science \\East Texas A\&M University}
+  - \usepackage[backend=biber, style=apa]{biblatex}
+  - \addbibresource{slides.bib}
+  - \hypersetup{allcolors=blue, colorlinks=true}
+  - \usepackage[percent]{overpic}
+  - \usepackage{comment}
+  - \usepackage{array}
+---
+
+#
+\title{L12.1 Text Generation}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.1}
+\maketitle
+
+# How do you Generate Sequence Data?
+
+::: columns
+::: {.column width=50%}
+- Train a model (usually Transformer or RNN) to predict next token
+  - e.g. like the encoder / decoder architecture, though we only have 1 sequence so only need decoder
+- Any network that can model the probability of the next token given the previous ones
+  is called a **language model**.
+- A language model captures the **latent space** of language: its statistical structure.
+- **Sample** from a language model: feed it an initial string (**conditioning data**)
+  ask it to generate next token.
+  - Add the generated output back to the input data, repeat
+::::
+:::: {.column width=50%}
+
+\begin{figure}
+\includegraphics[scale=0.13]{figures/ch12-1-text-generation-sampling}
+\label{fig:ch12-1-text-generation-sampling}
+\caption{The process of word-by-word text generation using a language model. \parencite[pg.367]{chollet-2021}}
+\end{figure}
+::::
+:::
+
+# The Importance of the Sampling Strategy
+
+::: columns
+::: {.column width=40%}
+- **Greedy sampling** consists of always choosing the most likely next token.
+- **Stochastic sampling** sampling from the probability distribution for the next character.
+- Useful to **control the amount of randomness** in the sampling process **softmax temperature**
+::::
+:::: {.column width=60%}
+\tiny
+```{python,evaluate=False}
+def reweight_distribution(original_distribution, temperature=0.5):
+    """Given a softmax probability distribution, reweight the probabilities
+    using a temperature variable.  Temperature 0 = greedy sampling, temperature
+    1 = uniform like (completely random) distribution
+
+    Parameters
+    ----------
+    original_distribution : ndarray 
+        Vector of probability over a vocabulary, probability must sum to 1.0
+    temperature : float
+        Factor quantifying the entropy of the output distribution
+
+    Returns
+    -------
+    new_distribution : ndarray
+        A reweighted version of the original distribution.
+    """
+    distribution = np.log(original_distribution) / temperature
+    distribution = np.exp(distribution)
+    # sum may longer be 1.0, so divide by the sum to obtain new probability
+    # distribution that sums to 1.0
+    return distribution / np.sum(distribution)
+```
+::::
+:::
+
+# Summary
+
+- You can generate discrete sequence data by training a model to predict the next
+  token(s), given previous tokens.
+- In the case of text, such a model is called a **language model**. It can be based on
+  either words or characters.
+- Sampling the next token requires a balance between adhering to what the
+  model judges likely, and introducing randomness.
+- One way to handle this is the notion of `softmax` temperature. Always experiment
+  with different temperatures to find the right one.
+- Don't expect to generate meaningful text (even for a chat GPT level
+  of training data), all you are doing is sampling data from a statistical model of which
+  words come after which words.  Language models are all form and no substance.
+
+#
+\title{L12.2 DeepDream}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.2}
+\maketitle
+
+# DeepDream
+
+- DeepDream is an artistic image-modification technique that uses the representations
+  learned by convolutional neural networks.
+- The DeepDream algorithm is almost identical to the convnet filter-visualization technique
+  introduced previously consisting of running a convnet in reverse:
+  - doing gradient ascent on the input to the convnet in order to maximize the activation of a
+    specific filter in an upper layer of the convnet.  
+
+\vskip 0.1in
+
+DeepDream uses this same idea, with a few simple differences:
+
+- With DeepDream, you try to maximize the activation of entire layers rather
+  than that of a specific filter, thus mixing together visualizations of large numbers
+  of features at once.
+- You start not from blank, slightly noisy input, but rather from an existing
+  image—thus the resulting effects latch on to preexisting visual patterns, distorting
+  elements of the image in a somewhat artistic fashion.
+- The input images are processed at different scales (called octaves), which
+  improves the quality of the visualizations.
+
+#
+\title{L12.3 Neural Style Transfer}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.3}
+\maketitle
+
+#
+\title{L12.4 Generating Images with Variational Autoencoders}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.4}
+\maketitle
+
+#
+\title{L12.5 Introduction to Generative Adversarial Networks}
+\subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.5}
+\maketitle
+
+# Bibliography
+\tiny
+\printbibliography
