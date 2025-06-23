@@ -223,10 +223,155 @@ You can use a pretrained convnet to define a loss that will:
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.4}
 \maketitle
 
+# Sampling from Latent Spaces of Images
+
+- The key idea of image generation is to develop a low-dimensional latent space of representations
+  (a vector space), where any point can be mapped to a “valid” image.
+- The module capable of realizing this mapping, is called a **generator** (in context of 
+  Generative Adversarial Networks GANs)
+  or a **decoder** (in case of Variable AutoEncoders VAEs).
+- GANs and VAEs are two different strategies for learning such latent spaces of 
+  image representations, each with its own characteristics.
+  - VAEs are great for well structured latent spaces.
+  - GANs can generate highly realistic images from latent spaces without as much structure.
+
+# Concept Vectors for Image Editing
+
+- **Concept vector** given a latent space of representations, or an embedding space, certain
+  directions in the space may encode interesting axes of variation in the original data.
+- For instance, *smile vector* `s` such that if `z` is embedded representation of face
+  - `z + s` is the embedded representation of the same face smiling.
+
+
+\begin{figure}
+\includegraphics[scale=0.35]{figures/ch12-15-smile-vector}
+\label{fig:ch12-12-15-smile-vector}
+\caption{The smile (and frown) vector example. \parencite[pg.393]{chollet-2021}}
+\end{figure}
+
+
+# Variational Autoencoders (VAEs)
+
+- Variational autoencoders are a kind of generative model that's especially appropriate for the task
+  of image editing via concept vectors.
+- They're a modern take on autoencoders, a type of network that aims to encode an input to
+  a low-dimensional latent space and then decode it back.
+- A classical image autoencoder takes an image, maps it to a latent vector space via
+  an encoder module, and then decodes it back to an output with the same dimensions
+  as the original image, via a decoder module.
+
+\begin{figure}
+\includegraphics[scale=0.25]{figures/ch12-16-autoencoder}
+\label{fig:ch12-16-autoencoder}
+\caption{An autoencoder mapping an input x to a compressed representation and then
+decoding it back as x' \parencite[pg.394]{chollet-2021}}
+\end{figure}
+
+# Variational Autoencoder Operation
+
+A VAE, instead of compressing its input image into a fixed code in the latent
+space, turns the image into the parameters of a statistical distribution: a mean and a variance.
+
+\begin{figure}
+\includegraphics[scale=0.18]{figures/ch12-17-vae-operation}
+\label{fig:ch12-17-vae-operation}
+\caption{A VAE maps an image to two vectors, z\_mean and z\_log\_sigma, which define a
+probability distribution over the latent space, used to sample a latent point to decode. \parencite[pg.395]{chollet-2021}}
+\end{figure}
+
+# Variational Autoencoder Operation
+
+How a VAE works:
+
+1. An encoder module turns the input sample, `input_img`, into two parameters
+   in a latent space of representations, `z_mean` and `z_log_variance`.
+2. You randomly sample a point `z` from the latent normal distribution that’s
+   assumed to generate the input image, via 
+   `z = z_mean + exp(z_log_variance) * epsilon`,
+   where epsilon is a random tensor of small values.
+3. A decoder module maps this point in the latent space back to the original input image.
+
+Continuity, combined with the low dimensionality of the latent space, forces every direction in the
+latent space to encode a meaningful axis of variation of the data, making the latent
+space very structured and thus highly suitable to manipulation via concept vectors.
+
+# Variational Autoencoder Operation
+
+::: columns
+::: {.column width=60%}
+```{python,evaluate=False}
+# encodes the input into mean and variance
+# parameters
+z_mean, z_log_variance = encoder(input_img)
+
+# draws a latent point using a small
+#random epsilon
+z = z_mean + exp(z_log_variance) * epsilon
+
+# decodes z back to an image
+reconstructed_img = decoder(z)
+
+# instantiates the autoencoder model which
+# maps an input image to its reconstruction
+model = Model(input_img, reconstructed_img)
+```
+::::
+:::: {.column width=40%}
+
+- VAE trained via 2 loss function:
+  1. **reconstruction loss** that forces decoded samples to match initial inputs
+  2. **regularization loss** that helps learn well-rounded latent distribution.
+::::
+:::
+
+# Summary
+
+- Image generation with deep learning is done by learning latent spaces that capture
+  statistical information about a dataset of images. By sampling and decoding
+  points from the latent space, you can generate never-before-seen images.
+  There are two major tools to do this: VAEs and GANs.
+- VAEs result in highly structured, continuous latent representations. For this reason,
+  they work well for doing all sorts of image editing in latent space: face
+  swapping, turning a frowning face into a smiling face, and so on. They also work
+  nicely for doing latent-space-based animations, such as animating a walk along a
+  cross section of the latent space or showing a starting image slowly morphing
+  into different images in a continuous way.
+- GANs enable the generation of realistic single-frame images but may not induce
+  latent spaces with solid structure and high continuity.
+
+
 #
 \title{L12.5 Introduction to Generative Adversarial Networks}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.5}
 \maketitle
+
+# Generative Adversarial Networks (GANs)
+
+::: columns
+::: {.column width=60%}
+\begin{figure}
+\includegraphics[scale=0.16]{figures/ch12-19-generative-adversarial-network}
+\label{fig:ch12-19-generative-adversarial-network}
+\caption{A generator transforms random latent vectors into images, and a discriminator seeks
+to tell real images from generated ones.  The generator is trained to fool the
+discriminator. \parencite[pg.402]{chollet-2021}}
+\end{figure}
+::::
+:::: {.column width=40%}
+A GAN is: a forger network and an expert network, each being trained
+to best the other. 
+
+As such, a GAN is made of two parts:
+
+- **Generator network** Takes as input a random vector (a random point in the
+  latent space), and decodes it into a synthetic image
+- **Discriminator network** (or **adversary**) Takes as input an image (real or synthetic),
+  and predicts whether the image came from the training set or was created by
+  the generator network.
+
+::::
+:::
+
 
 # Bibliography
 \tiny
