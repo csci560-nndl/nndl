@@ -129,10 +129,94 @@ DeepDream uses this same idea, with a few simple differences:
 - The input images are processed at different scales (called octaves), which
   improves the quality of the visualizations.
 
+# Summary
+
+- DeepDream consists of running a convnet in reverse to generate inputs based
+  on the representations learned by the network.
+- The results produced are fun and somewhat similar to the visual artifacts
+  induced in humans by the disruption of the visual cortex via psychedelics.
+- Note that the process isn’t specific to image models or even to convnets. It can
+  be done for speech, music, and more.
+
 #
 \title{L12.3 Neural Style Transfer}
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.3}
 \maketitle
+
+# Neural Style Transfer
+
+
+\begin{figure}
+\includegraphics[scale=0.22]{figures/ch12-9-neural-style-transfer}
+\label{fig:ch12-9-neural-style-transfer}
+\caption{A style transfer example. \parencite[pg.383]{chollet-2021}}
+\end{figure}
+
+- Another major development in deep-learning image modification **neural style transfer**.
+- **Style** essentially means texture, colors and visual patterns.
+- The key notion behind implementing style transfer is the same idea that’s central
+  to all deep learning algorithms: you define a loss function to specify what you want to
+  achieve, and you minimize this loss.
+
+# Neural Style Transfer
+
+We know what we want to achieve: conserving the content of the original image while
+adopting the style of the reference image.
+
+If we were able to mathematically define **content** and **style** than an appropriate
+loss function to minimize would be:
+
+```{python,evaluate=False}
+loss = (distance(style(reference_image) - style(combination_image)) +
+        distance(content(original_image) - content(combination_image)))
+```
+
+A fundamental observation was that deep convolutional neural
+networks offer a way to mathematically define the style and content functions
+
+# Content Loss and Style Loss
+
+Activations of different layers provide decomposition of contents over different spatial scales.
+
+::: columns
+::: {.column width=47%}
+\begin{block}{Content Loss}
+Expect content of image (global and abstract) to be captured by upper layers.
+
+$\therefore$ A good candidate for content loss is L2 norm between activations of an upper layer in a
+pretrained convnet, computed over target and generated image.
+\end{block}
+::::
+:::: {.column width=47%}
+\begin{block}{Style Loss}
+Content uses an upper layer, but style involves all spatial scales.
+
+\vskip 0.1in
+$\therefore$ For style, use the inner product of the feature maps of selected layers.
+
+\phantom{A good candidate for content loss is L2 norm between activations of an upper layer.}
+
+\end{block}
+::::
+:::
+
+You can use a pretrained convnet to define a loss that will:
+
+- Preserve content by maintaining similar high-level layer activations between the
+  original image and the generated image.
+- Preserve style by maintaining similar correlations within activations for both \newline low level
+  layers and high-level layers.
+
+# Summary
+
+- Style transfer consists of creating a new image that preserves the contents of a
+  target image while also capturing the style of a reference image.
+- Content can be captured by the high-level activations of a convnet.
+- Style can be captured by the internal correlations of the activations of different
+  layers of a convnet.
+- Hence, deep learning allows style transfer to be formulated as an optimization
+  process using a loss defined with a pretrained convnet.
+- Starting from this basic idea, many variants and refinements are possible.
 
 #
 \title{L12.4 Generating Images with Variational Autoencoders}
