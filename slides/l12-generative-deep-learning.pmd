@@ -372,6 +372,37 @@ As such, a GAN is made of two parts:
 ::::
 :::
 
+# Summary
+
+- A GAN consists of a generator network coupled with a discriminator network.
+  The discriminator is trained to differentiate between the output of the generator
+  and real images from a training dataset, and the generator is trained to fool
+  the discriminator. Remarkably, the generator never sees images from the training
+  set directly; the information it has about the data comes from the discriminator.
+- GANs are difficult to train, because training a GAN is a dynamic process rather
+  than a simple gradient descent process with a fixed loss landscape. Getting a
+  GAN to train correctly requires using a number of heuristic tricks, as well as
+  extensive tuning.
+- GANs can potentially produce highly realistic images. But unlike VAEs, the
+  latent space they learn doesn’t have a neat continuous structure and thus may
+  not be suited for certain practical applications, such as image editing via latentspace
+  concept vectors.
+
+# Chapter Summary
+
+- You can use a sequence-to-sequence model to generate sequence data, one step
+  at a time. This is applicable to text generation, but also to note-by-note music
+  generation or any other type of timeseries data.
+- DeepDream works by maximizing convnet layer activations through gradient
+  ascent in input space.
+- In the style-transfer algorithm, a content image and a style image are combined
+  together via gradient descent to produce an image with the high-level features
+  of the content image and the local characteristics of the style image.
+- VAEs and GANs are models that learn a latent space of images and can then
+  dream up entirely new images by sampling from the latent space. Concept vectors
+  in the latent space can even be used for image editing.
+
+
 
 # Bibliography
 \tiny
