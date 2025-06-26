@@ -107,7 +107,7 @@ def reweight_distribution(original_distribution, temperature=0.5):
 \subtitle{CSci 560: Deep Learning w/ Python (Chollet) Ch. 12.2}
 \maketitle
 
-# DeepDream
+# DeepDream Algorithm
 
 - DeepDream is an artistic image-modification technique that uses the representations
   learned by convolutional neural networks.
@@ -118,7 +118,7 @@ def reweight_distribution(original_distribution, temperature=0.5):
 
 \vskip 0.1in
 
-DeepDream uses this same idea, with a few simple differences:
+The DeepDream algorithm uses this same idea, with a few simple differences:
 
 - With DeepDream, you try to maximize the activation of entire layers rather
   than that of a specific filter, thus mixing together visualizations of large numbers

@@ -13,6 +13,9 @@ data/glove*
 data/spa-eng/*
 data/coco/*
 data/jena*
+data/img_align_celeba/*
+figures/combination_image_at_iteration*.png
+figures/generated_img_*.png
 
 *.keras
 *.v2
