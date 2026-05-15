@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3 as upstream
+FROM continuumio/anaconda3 AS upstream
 
 # Verify OS version is expected one
 RUN . /etc/os-release && if [ "${VERSION_CODENAME}" != "bookworm" ]; then exit 1; fi
