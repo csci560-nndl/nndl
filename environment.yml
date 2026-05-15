@@ -14,3 +14,7 @@ dependencies:
 - jupyterlab
 - twisted
 - pydot
+- pip
+- pip:
+  - tensorflow # if no gpu
+#  - tensorflow[and-cuda] # if want gpu support
