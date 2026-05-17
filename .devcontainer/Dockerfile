@@ -24,11 +24,12 @@ RUN chmod =2775 /opt/conda
 
 USER root
 
-
 # Setup conda to mirror contents from https://github.com/ContinuumIO/docker-images/blob/master/anaconda3/debian/Dockerfile
+ARG CONTAINER_WORKSPACE_FOLDER
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
-    PATH=/opt/conda/bin:$PATH
+    PATH=/opt/conda/bin:$PATH \
+    PYTHONPATH=${CONTAINER_WORKSPACE_FOLDER}/src
 ARG USERNAME=vscode
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y --no-install-recommends \
@@ -60,13 +61,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 COPY environment.yml* /tmp/conda-tmp/
 RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yml; fi \
     && rm -rf /tmp/conda-tmp
-
-# for some reason recent install to tensorflow w/ cuda is unable to load GPU unless we explicitly
-# specify the library path wither the nvidia library .so can be found.  This is the correct path
-# when we install tensorflow and cuda using pip currently.  This also should be put into the .bashrc
-# file if we want to run python scripts to use gpu from command line
-RUN echo "export LD_LIBRARY_PATH=$(find /opt/conda -name '*.so*' | grep nvidia | xargs dirname | sort -u | paste -d ':' -s -)" >> ~/.bashrc
-
 
 # Enable contrib component in debian apt sources so we can install nvtop
 # and other packages
