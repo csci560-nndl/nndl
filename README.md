@@ -9,7 +9,7 @@ Major reorganization done Summer 2025.
 # Getting Started
 
 The main content of the course will be delivered as interactive iPython/Jupyter notebooks.
-These notebooks can be found in the `notebooks` subriectory of the offical class `nndl`
+These notebooks can be found in the `notebooks` subdirectory of the official class `nndl`
 repository.  
 
 In addition, there will be daily/weekly assigned readings from the required course
@@ -35,7 +35,7 @@ our required textbook examples and readings.
 Manning. This is our required textbook. Make sure that you get and use the most recent 2nd edition of this text.
 - Stevens, Antiga, Viehmann (2021). 
 [Deep Learning with PyTorch: Build, Train, and Tune Neural Networks Using Python Tools](https://www.amazon.com/Deep-Learning-PyTorch-Neural-Networks/dp/B097R3TBLR/ref=sr_1_1?s=books&sr=1-1)
-Manning.  If interested in a good book on the `PyTorch` library, though we are using Kearas in the course
+Manning.  If interested in a good book on the `PyTorch` library, though we are using Keras in the course
 for assignments and lectures.
 - Aurelian Geron
 (2022). [Hands-On Machine Learning with SciKit-Learn and TensorFlow: Concepts, tools, and techniques to build intelligent systems 3rd Edition](https://www.amazon.com/Hands-Machine-Learning-Scikit-Learn-TensorFlow/dp/1098125975/ref=sr_1_1?s=books&sr=1-1).
